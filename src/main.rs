@@ -1,17 +1,9 @@
-use std::fs;
+mod file_handler;
 
 fn main() {
     println!("Testing file");
-    let file = open_file();
-    print_file(file);
+    let filename: String = "Story/[C0,a].txt".to_string();
+    let file = file_handler::open_file(filename);
+    println!("Done");
+    file_handler::print_file(file);
 }
-
-fn open_file() -> std::string::String {
-    let file = fs::read_to_string("test.txt").expect("Error opening file");
-    file
-}
-
-fn print_file(file: std::string::String){
-    println!("{}", file);
-}
-
