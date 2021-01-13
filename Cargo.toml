@@ -1,5 +1,5 @@
 [package]
-name = "Devolution-Rust"
+name = "devolution_rust"
 version = "0.1.0"
 authors = ["markuz449 <markuz449@gmail.com>"]
 edition = "2018"
