@@ -6,9 +6,13 @@ fn main() {
     let file_text = file_handler::open_file(filename);
     print_file(&file_text);
 
-    println!("Count: {}", text_manipulation::bracket_count(&file_text));
+    println!("Bracket Strings: {:?}", text_manipulation::get_bracket_strings(&file_text));
 }
 
 fn print_file(file: &String) {
     println!("{}", file);
+}
+
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
 }
