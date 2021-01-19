@@ -1,7 +1,7 @@
-use text_manipulation::StoryPage;
+use story_page::StoryPage;
 
 mod file_handler;
-mod text_manipulation;
+mod story_page;
 
 fn main() {
     let filename: String = String::from("Story/[C0,a].txt");
