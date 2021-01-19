@@ -1,66 +1,84 @@
 use regex::Regex;
 
-pub fn get_bracket_strings(mut text: String) -> Vec<String>{
-    let bracket_num: usize = bracket_count(&text);
-    let mut bracket_strings: Vec<String> = Vec::new();
-    let mut start: usize;
-    let mut end: usize;
-
-    for _ in 0..bracket_num{
-        start = find_indicies(&text, '[');
-        end = find_indicies(&text, ']');
-
-        println!("Bracket Num: {}, Start Index: {:?}, End Index: {:?}", bracket_num,  start, end);
-
-        bracket_strings.push(get_slice(&text, start, end));
-        println!("Slices: {:?}", bracket_strings);
-
-        println!("Removing Brackets...");
-        text = remove_brackets(text, start, end);
-    }
-
-    println!("Clean Text: {}", text);
-    bracket_strings
+pub struct StoryPage{
+    pub text: String,
+    pub current_code: String,
+    pub previous_code: String,
+    pub option_codes: Vec<String>
 }
 
-fn bracket_count(text: &str) -> usize {
-    let bracket = Regex::new(r"[\[]").unwrap();
-    let count: usize = bracket.find_iter(&text).count();
-    count
-}
+impl StoryPage{
+    /*** Manipulation Functions ***/
+    pub fn new_story_page(text: String) -> StoryPage{
+        let current_code: String = String::from(""); 
+        let previous_code: String = String::from("");
+        let option_codes: Vec<String> = Vec::new();
 
-fn find_indicies(text: &str, find_char: char) -> usize{
-    let find_index = text.find(find_char);
-    let mut return_index = 0;
-    let mut none_found: bool = false;
-    match find_index {
-        Some(found_index) => return_index = found_index,
-        None => none_found = true,
-    }
-    if none_found{
-        println!("Error finding given char: {}", find_char);
-        println!("Exiting Program...");
-        std::process::exit(0);
-    }
-    return_index
-}
+        let mut story: StoryPage = StoryPage{text, current_code, previous_code, option_codes};
 
-fn get_slice(text: &str, start: usize, end: usize) -> String{
-    let mut clean_text: String = String::from(text);
-    let slice_option = clean_text.get_mut(start..(end + 1));
-    let mut slice: String = String::from("");
-    match slice_option{
-        Some(x) => slice = x.to_string(),
-        None => println!("There is no slice"),
-    }
-    if slice.eq(""){
-        println!("Exiting Program...");
-        std::process::exit(0);
-    }
-    slice
-}
+        let bracket_num: usize = Self::bracket_count(&story.text);
+        if bracket_num < 2{
+            panic!("Error in files text as there is less than two bracketed codes!!");
+        }
 
-fn remove_brackets(mut text: String, start: usize, end: usize) -> String{
-    text.replace_range(start..(end + 1), "");
-    text
+        story = Self::get_current_code(story);
+        story = Self::get_choices(story, bracket_num -1);
+        story
+    }
+
+    fn get_current_code(mut story: StoryPage) -> StoryPage {
+        let start: usize = Self::find_indicies(&story.text, '[');
+        let end: usize = Self::find_indicies(&story.text, ']');
+        story.current_code = Self::get_slice(&story.text, start, end);
+        story = Self::remove_brackets(story, start, end);
+        story
+    }
+
+    fn get_choices(mut story: StoryPage, bracket_num: usize) -> StoryPage {
+        let mut start: usize;
+        let mut end: usize;
+
+        for _ in 0..bracket_num{
+            start = Self::find_indicies(&story.text, '[');
+            end = Self::find_indicies(&story.text, ']');
+            story.option_codes.push(Self::get_slice(&story.text, start, end));
+            story = Self::remove_brackets(story, start, end);
+        }
+        story
+    }
+
+    fn remove_brackets(mut story: StoryPage, start: usize, end: usize) -> StoryPage {
+        story.text.replace_range(start..(end + 1), "");
+        story
+    }
+
+
+    /*** Supporting Functions (Non-Manipulation) ***/
+    fn bracket_count(text: &str) -> usize {
+        let bracket = Regex::new(r"[\[]").unwrap();
+        let count: usize = bracket.find_iter(&text).count();
+        count
+    }
+
+    fn find_indicies(text: &str, find_char: char) -> usize {
+        let find_index = text.find(find_char);
+        let return_index: usize;
+        match find_index {
+            Some(found_index) => return_index = found_index,
+            None => panic!("Problem finding char: {}", find_char),
+        }
+        return_index
+    }
+
+    fn get_slice(text: &str, start: usize, end: usize) -> String {
+        let mut clean_text: String = String::from(text);
+        let slice_option = clean_text.get_mut(start..(end + 1));
+        let slice: String;
+        match slice_option{
+            Some(x) => slice = String::from(x),
+            None => panic!("There is no slice with given Start: {} and End {} indexes", start, end),
+        }
+        slice
+    }
+
 }
