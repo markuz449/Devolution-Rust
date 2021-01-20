@@ -31,7 +31,7 @@ impl StoryPage{
     }
 
     fn replace_codes(mut story: StoryPage) -> StoryPage {
-        story.text = story.text.replace("[NAME]", "Marcus");
+        story.text = story.text.replace("[Name]", "Marcus");
         story
     }
 
