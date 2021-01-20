@@ -1,4 +1,4 @@
-[C3,1,2]The confusion, the slowed world, the pain - That must have been their aspects. Your heart is beating fast, fuelled by adrenaline, but not nearly that sickening rapid-fire speed it was just a few seconds ago. Stupid. What just came over you?
+[C3,1,2]The confusion, the slowed world, the pain - That must have been their Aspects. Your heart is beating fast, fuelled by adrenaline, but not nearly that sickening rapid-fire speed it was just a few seconds ago. Stupid. What just came over you?
 
 “OK.” You breathe out, calming yourself down. “OK. I’m listening.”
 
@@ -14,10 +14,10 @@ You have always trusted her before to have good reason for doing what she does e
 
 “What was your answer?” you finally ask. 
 
-Rasputin smiles, “Good question. But I think it best if I show you.”
+Rasputin smiles,“I don’t think you’re ready for that. Go home little [Xoy]”
 
 
-[C2,1]”OK.” You say. The hands release you. You follow when Rasputin starts walking.
+[C1]The hands release you and you go.
 
-[C3,1,2,2]”Fuck that. I’m not going anywhere with you.” You say.
+[C3,1,1]”Fuck that. I’m going to stop you” 
 [END]
