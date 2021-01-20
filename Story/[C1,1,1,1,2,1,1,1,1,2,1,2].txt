@@ -1,4 +1,4 @@
-[1.1.1.1.2.1.1.1.1.2.1.2]”Yeah, what?” she calls out from behind you, the opposite direction from where you heard the noise. 
+[C1,1,1,1,2,1,1,1,1,2,1,2]”Yeah, what?” she calls out from behind you, the opposite direction from where you heard the noise. 
 
 Well, shit. Whoever is out there, they are coming towards you now, brushing through the dense foliage. You may have gone a little too far into the forest. “Is anyone else out there?” You ask whoever it is that’s coming towards you. “Friend or foe?” 
 

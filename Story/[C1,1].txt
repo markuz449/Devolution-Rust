@@ -1,4 +1,4 @@
-[1.1]Your sister appears in the doorway looking as angry as you are. She opens her mouth to retort but you aren’t finished. “Dad didn’t work his fucking bones to the ground for you to skive off work to go hang out with rebel scum like them. Did you even fucking stop to consider who you were hurting?” 
+[C1,1]Your sister appears in the doorway looking as angry as you are. She opens her mouth to retort but you aren’t finished. “Dad didn’t work his fucking bones to the ground for you to skive off work to go hang out with rebel scum like them. Did you even fucking stop to consider who you were hurting?” 
 
 “You don’t know what you’re talking about, [NAME]. Do you even have any idea who I was with!? No. Of course not. You don’t think.”
 

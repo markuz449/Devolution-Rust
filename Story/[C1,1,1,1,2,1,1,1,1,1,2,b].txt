@@ -1,4 +1,4 @@
-[1.1.1.1.2.1.1.1.1.1.2.b]“I knew you were a zombie, [NAME], but not to this extent. I’ve been gone this whole week!”
+[C1,1,1,1,2,1,1,1,1,1,2,b]“I knew you were a zombie, [NAME], but not to this extent. I’ve been gone this whole week!”
 
 “Huh.” You guess you had been more tired than usual. More people had disappeared from The Factory this week and you had had to increase your work hours to keep up with demand.
 

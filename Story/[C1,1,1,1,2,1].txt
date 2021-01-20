@@ -1,4 +1,4 @@
-[1.1.1.1.2.1]No sound jumps out at you, no twitch of movement calls your attention. Nothing. Your knees almost buckle on your next step.
+[C1,1,1,1,2,1]No sound jumps out at you, no twitch of movement calls your attention. Nothing. Your knees almost buckle on your next step.
 
 Where is she?
 

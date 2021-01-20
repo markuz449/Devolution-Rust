@@ -1,4 +1,4 @@
-[1.1.2.1.1]You punch the closest one right in the chin, the highest you can reach. They let out a deep grunt but don’t budge from on top of you.
+[C1,1,2,1,1]You punch the closest one right in the chin, the highest you can reach. They let out a deep grunt but don’t budge from on top of you.
 
 “Tie [Xer] up. We need to get out of here.” A woman’s voice says from the other side of the room near the door. Oh fuck no. Fuck this. There is no way you’re going anywhere with these people. 
 

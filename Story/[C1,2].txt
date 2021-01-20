@@ -1,4 +1,4 @@
-[1.2]”OK.” You say rubbing a hand down your face. How do you even begin to address what your sister had done. “I saw you with the rebels today…” you glance up at her. “Bad choice on your part I’m afraid.”
+[C1,2]”OK.” You say rubbing a hand down your face. How do you even begin to address what your sister had done. “I saw you with the rebels today…” you glance up at her. “Bad choice on your part I’m afraid.”
 
 
 She chuckles weakly and looks away. “Yeah. Well… Staying at the factory is the shittier option. It hurt me to work there - it’s hurting you! Look at you, you’re falling asleep as we talk.” You straighten your spine and try to look more awake from where you were slumped down in your seat. Eve frowns at your apparent recovery. “Do you have any idea how much better I’m feeling? I get to sleep!”

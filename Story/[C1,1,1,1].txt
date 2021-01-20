@@ -1,4 +1,4 @@
-[1.1.1.1]It doesn’t take long for you to leave the protective walls of the city. As you approach the edge more and more buildings sit dark, crumbling, and empty. The buildings loom, deep shadows stretching out from them where they aren’t during the day. 
+[C1,1,1,1]It doesn’t take long for you to leave the protective walls of the city. As you approach the edge more and more buildings sit dark, crumbling, and empty. The buildings loom, deep shadows stretching out from them where they aren’t during the day. 
 
 You never come out here at night, and shouldn’t be out here now. But you have no time to second guess yourself as you hurry towards The Factory. 
 

@@ -1,4 +1,4 @@
-[0.a]Your route home takes you through The Fringes - an abandoned part of this sprawling city you call home. It’s quiet. This isn’t the part of your city that your people are allowed to occupy but if the odd shadow or creek disturbs your walk you never stop to acknowledge it. It’s better to just keep your head down and get home.
+[C0,a]Your route home takes you through The Fringes - an abandoned part of this sprawling city you call home. It’s quiet. This isn’t the part of your city that your people are allowed to occupy but if the odd shadow or creek disturbs your walk you never stop to acknowledge it. It’s better to just keep your head down and get home.
 
 A heavy cloud of exhaustion has settled over you like the familiar old blanket that greets you at the end of every work day. Except instead of comfort it’s weight carries with it only bone weary dread. This is just another day in an endless stretch of days. You sigh. 
 

@@ -1,4 +1,4 @@
-[1.1.1.1.2.1.1.1.1]You take a deep breath in, calming your raging emotions. The rock drops from your hand, you don’t know why you’re still holding it. 
+[C1,1,1,1,2,1,1,1,1]You take a deep breath in, calming your raging emotions. The rock drops from your hand, you don’t know why you’re still holding it. 
 
 It’s in the brief span of silence that you hear the footsteps coming up from behind you.
 

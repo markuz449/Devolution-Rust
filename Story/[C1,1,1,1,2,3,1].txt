@@ -1,4 +1,4 @@
-[1,1,1,1,2,3,1] Path not finished
+[C1,1,1,1,2,3,1] Path not finished
 
 [CGO] Game Over
 

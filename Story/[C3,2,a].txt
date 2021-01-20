@@ -1,4 +1,4 @@
-[3.2.a]“What exactly is it that you think we’re doing?” Rasputin asks. He motions and the hands holding you back drop away. You realize the Vagabonds are surrounding you now, with you, Eve, and Rasputin in the center.
+[C3,2,a]“What exactly is it that you think we’re doing?” Rasputin asks. He motions and the hands holding you back drop away. You realize the Vagabonds are surrounding you now, with you, Eve, and Rasputin in the center.
 
 You are the only one who looks concerned with this arrangement.
 

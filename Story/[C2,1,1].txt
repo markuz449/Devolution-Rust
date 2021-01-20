@@ -1,4 +1,4 @@
-[2.1.1]”Go get the others.” Rasputin says to Eve. She nods and peels off from your party. You hesitate, not wanting to be alone with Rasputin. He arches an eyebrow at the look you are giving him then head off after the Robots himself.
+[C2,1,1]”Go get the others.” Rasputin says to Eve. She nods and peels off from your party. You hesitate, not wanting to be alone with Rasputin. He arches an eyebrow at the look you are giving him then head off after the Robots himself.
 
 You follow.
 

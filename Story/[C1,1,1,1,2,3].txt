@@ -1,4 +1,4 @@
-[1.1.1.1.2.3]Eventually, you reach the edge of the city.
+[C1,1,1,1,2,3]Eventually, you reach the edge of the city.
 
 The first sign is the moss, the buildings around you appear with patches of glowing green. It takes you a second to notice. Their glow isn’t much brighter then the natural reflection off the clouds but when you do notice you stumble to a stop.
 

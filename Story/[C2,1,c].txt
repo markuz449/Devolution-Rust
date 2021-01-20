@@ -1,4 +1,4 @@
-[2.1.c]“How don’t you know. Haven’t you asked? I’m not confused am I? This isn’t the first time the flytecraft has come here. From what you were insinuating I assumed this flytecraft is what’s been supplying the food and shit.”
+[C2,1,c]“How don’t you know. Haven’t you asked? I’m not confused am I? This isn’t the first time the flytecraft has come here. From what you were insinuating I assumed this flytecraft is what’s been supplying the food and shit.”
 
 “Yes that part is correct.” The flytecraft touches down with barley a whisper and doors open on several sides. “But we can’t exactly ask the pilots.”
 

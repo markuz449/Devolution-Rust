@@ -1,4 +1,4 @@
-[1.1.1.1.3.1.2]You pass through several sets of heavy doors before finally coming out into a room you have never seen before. The room is smaller then the furnace floor.
+[C1,1,1,1,3,1,2]You pass through several sets of heavy doors before finally coming out into a room you have never seen before. The room is smaller then the furnace floor.
 
 Crates are piled around a half dozen forklifts and along the back wall you see four old trucks lined up in front of huge shutter doors. The room glows green from the light coming in from outside.
 

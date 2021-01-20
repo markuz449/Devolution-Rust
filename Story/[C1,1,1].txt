@@ -1,4 +1,4 @@
-[1.1.1]You can’t let her do this. You slap your face to try and startle yourself back awake then stumble back to your feet. Before you can second guess your sudden resolve you head out into the streets to look for Eve.
+[C1,1,1]You can’t let her do this. You slap your face to try and startle yourself back awake then stumble back to your feet. Before you can second guess your sudden resolve you head out into the streets to look for Eve.
 
 It’s fully dark out and a harsh chill has settled over the town center. You must have been asleep at the table for longer than you thought. 
 
