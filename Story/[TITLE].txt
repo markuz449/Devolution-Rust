@@ -1,45 +1,44 @@
-C
-C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C.C;C=C=C=C+C.C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C:C=CiCiCiCiCiCiC=C+C=C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C=CiC)C)C=C;C:C:C+C)CiC=C+C,C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C,C=CiC)C;C)CIC)C)C)CIC)C:C=CiC=C;C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C=CiC=C=C)C)C)C)CiCiC)C)C)CIC:CiC+C+C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C+C)C+C)C)CiCiCiCiCiCiCiCiC)C)CIC=CiC+C:C'C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C,C:C;C;C+C+C+C+C+C+C;C:C,C.C C C C C C C C)CiCiCiC+C:C:C:C;CiCiCiC)C)C+CiC=C'C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C.C:C;C+C+C=CiCiCiCiCiCiCiCiCiCiC=C+C+C;C.C C C C C=C:C:C,C,C,C:C:C:C=CiC)C)C;C=C+C'C
-C C C C C C C C C C C C C C C C C C C C C C C C C C C C,C;C+C=C=CiCiC)C)C)C)C)C)C)C)C)C)C)CiCiC=C=C+C;C,C C C C C C C,C,C,C:C=CiC)C)C+C=C:C
-C C C C C C C C C C C C C C C C C C C C C C C C C C,C;C+C=CiCiC)C)C)C)C)C)CICICICICICIC)C)C)C)CiCiC=C=C=C;C.C C C C C,C,C:C=CiC)C=CiC+C
-C C C C C C C C C C C C C C C C C C C C C C C C C;C+C=CiCiC)C)C)CICICICICICTCICICICICICIC)C)C)C)CiCiCiCiC=C+C,C C C C,C:C=C)C)C;C=C,C
-C C C C C C C C C C C C C C C C C C C C C C C,C+C=CiC)C)CICICICICICICTCTCTCTCTCICTCICICICICICIC)C)C)CIC)CiC=C+C,C,C:C+CiC)C=CiC+C
-C C C C C C C C C C C C C C C C C C C C C C,C+CiC)C)CICICICICICICTCTCTCTCTCTCTCTCTCTCTCTCIC)C)CICICICIC)C)CiC=C:C:CiC)C)CiC=C'C
-C C C C C C C C C C C C C C C C C C C C C,C=CiC)C)CICICICICICTCLCLCTCTCTCTCTCTCTCTCTCTCICICTCTCTCTCICICIC)C+C;C+CiC)C+CiC`C
-C C C C C C C C C C C C C C C C C C C C C=CiC)C)CICICICTCTCLCTCLCTCTCTCTCTCTCTCTCTCICICTCTCLCLCTCTCTCICIC+C:CiC)CiCiC:C'C
-C C C C C C C C C C C C C C C C C C C C+CiC)C)CICICTCTCTCLCLCLCTCTCTCTCTCTCTCTCTCTCTCTCLCLCLCTCTCTCTC+C:CiC)C)C)C=C,C
-C C C C C C C C C C C C C C C C C C C C=C)C)CICTCTCTCTCTCTCTCTCTCTCTCLCTCTCTCTCTCTCLCLCLCLCLCLCTCiC:C=C)CICICiCiCiC;C
-C C C C C C C C C C C C C C C C C C C.CiC)CICICICTCTCTCTCTCTCTCTCLCTCTCTCICTCLCLCLCLCLCLCLCTC)C;C=C)CIC)C)C)C)C)CiC;C
-C C C C C C C C C C C C C C C C C C C:C)C)CICICICTCTCTCTCTCLCTCTCTCTCTCTCLCLCHCLCLCLCLCLC)C;C=C)CICIC)CICICICICiC=C:C
-C C C C C C C C C C C C C C C C C C C:CiC)CICICICTCTCTCTCTCTCTCTCTCLCLCLCHCLCLCHCLCLC)C+C=C)CICIC)CICTCTCTCIC)CiC=C
-C C C C C C C C C C C C C C C C C C C.CiC)CICICICTCTCTCTCICTCTCLCLCLCHCHCLCLCLCLC)C;C=C)CICIC)CICTCTCTCTCICIC)CiC+C
-C C C C C C C C C C C C C C C C C C C=CiC)CICICICICICICTCTCLCLCLCLCLCLCHCLCLC=C:CiC)CICIC)CTCTCTCTCTCTCICICIC)CiC'C
-C C C C C C C C C C C C C C C C C+CiC)CiC)C)C)CICICTCTCLCLCLCLCLCLCLCLCTC=C:CiC)CICIC)CTCTCTCTCLCTCTCICICIC)CiC;C
-C C C C C C C C C C C C C C C+CiCiC)CiC:C)CICICTCTCLCLCTCLCLCLCLCTC=C;C+CiC)CIC)CICTCTCTCTCLCTCTCTCICIC)C)CiC;C
-C C C C C C C C C C C C C C=C;C)CiC=C:C,C=C)CICTCTCTCTCLCTCTCIC=C:CiC)C)CIC)CTCTCTCLCLCLCTCTCTCTCTCICIC)CiC;C
-C C C C C C C C C C C C+CiC)CiCiC:C:C,C C C+C)CICICICTCIC+C:C+CiC)CIC)C)CTCTCTCTCLCLCTCTCTCTCTCICIC)C)C=C,C
-C C C C C C C C C C:C=C;C)CiC=C:C,C,C C C C C,CiC+C+C:C:CiC)C)CIC)CICTCTCTCTCTCTCTCTCTCTCICICICIC)C=C+C'C
-C C C C C C C C.C+CiCiC)CiC=C:C:C,C,C C C C,C,C:C:C=CiC)C)C)CiCICICTCTCTCTCTCTCTCTCICICICICIC)C=C+C
-C C C C C C C,C=C=C)CiCiC=C;C:C,C,C,C,C:C:C:C=CiCiC)CiC)CiCICICICICTCICICICTCICICICIC)C)CiC+C:C'C
-C C C C C C+C=C:C)C)CiC=C=C;C:C:C:C;C=CiCiCiC)C+C)C=C C C`C:CiC)C)C)CICICICICIC)CiCiC+C'C
-C C C C.C+C=C:C)C)CiCiCiCiCiCiCiCiC)C)C)C+CiCiC;C
-C C C.C+C=C;C)C)CiCiCiCiCiCiC)C)C)C;CiCiC+C
-C C.C+C=CiC:C)C)C)C)C)C)C)C=C+CiCiC+C
-C.C;C=C=CiC+C:C:C:C:C=C)CiC=C;C
-C,C+C=C=CiCiCiCiCiCiC+C,C
-C`C+C=C+C+C+C;C`C
-C
-C	C C_C_C_C_C C C C C C C C C C C C C C C C C C C C C C C_C C C C C C C C C C_C C C C C_C C C C C C C C C C C C C C C C
-C C	C|C C C_C C\C C C C_C_C_C C_C_C C C C_C_C C_C_C_C C C|C C|C C_C C C C_C C|C C|C_C C(C_C)C C C_C_C_C C C C_C C_C_C C C
-C C	C|C C|C C|C C|C C/C C_C C\C\C C\C C/C C/C/C C_C C\C C|C C|C|C C|C C|C C|C|C C_C_C|C|C C|C C/C C_C C\C C|C C'C_C C\C C
-C C	C|C C|C_C|C C|C|C C C_C_C/C C\C CVC C/C|C C(C_C)C C|C|C C|C|C C|C_C|C C|C|C C|C_C C|C C|C|C C(C_C)C C|C|C C|C C|C C|C
-C C	C|C_C_C_C_C/C C C\C_C_C_C|C C C\C_C/C C C\C_C_C_C/C C|C_C|C C\C_C_C,C_C|C C\C_C_C|C|C_C|C C\C_C_C_C/C C|C_C|C C|C_C|C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-C
+
+
+                                                                    ..;===+.
+                                                                .:=iiiiii=+=
+                                                             .=i))=;::+)i=+,
+                                                          ,=i);)I)))I):=i=;
+                                                       .=i==))))ii)))I:i++
+                                                     +)+))iiiiiiii))I=i+:'
+                                .,:;;++++++;:,.       )iii+:::;iii))+i='
+                             .:;++=iiiiiiiiii=++;.    =::,,,:::=i));=+'
+                           ,;+==ii)))))))))))ii==+;,      ,,,:=i))+=:
+                         ,;+=ii))))))IIIIII))))ii===;.    ,,:=i)=i+
+                        ;+=ii)))IIIIITIIIIII))))iiii=+,   ,:=));=,
+                      ,+=i))IIIIIITTTTTITIIIIII)))I)i=+,,:+i)=i+
+                     ,+i))IIIIIITTTTTTTTTTTTI))IIII))i=::i))i='
+                    ,=i))IIIIITLLTTTTTTTTTTIITTTTIII)+;+i)+i`
+                    =i))IIITTLTLTTTTTTTTTIITTLLTTTII+:i)ii:'
+                   +i))IITTTLLLTTTTTTTTTTTTLLLTTTT+:i)))=,
+                   =))ITTTTTTTTTTTLTTTTTTLLLLLLTi:=)IIiii;
+                  .i)IIITTTTTTTTLTTTITLLLLLLLT);=)I)))))i;
+                  :))IIITTTTTLTTTTTTLLHLLLLL);=)II)IIIIi=:
+                  :i)IIITTTTTTTTTLLLHLLHLL)+=)II)ITTTI)i=
+                  .i)IIITTTTITTLLLHHLLLL);=)II)ITTTTII)i+
+                  =i)IIIIIITTLLLLLLHLL=:i)II)TTTTTTIII)i'
+                +i)i)))IITTLLLLLLLLT=:i)II)TTTTLTTIII)i;
+              +ii)i:)IITTLLTLLLLT=;+i)I)ITTTTLTTTII))i;
+             =;)i=:,=)ITTTTLTTI=:i))I)TTTLLLTTTTTII)i;
+           +i)ii::,  +)IIITI+:+i)I))TTTTLLTTTTTII))=,
+         :=;)i=:,,    ,i++::i))I)ITTTTTTTTTTIIII)=+'
+       .+ii)i=::,,   ,,::=i)))iIITTTTTTTTIIIII)=+
+      ,==)ii=;:,,,,:::=ii)i)iIIIITIIITIIII))i+:'
+     +=:))i==;:::;=iii)+)=  `:i)))IIIII)ii+'
+   .+=:))iiiiiiii)))+ii;
+  .+=;))iiiiii)));ii+
+ .+=i:)))))))=+ii+
+.;==i+::::=)i=;
+,+==iiiiii+,
+`+=+++;`
+
+	 ____                      _         _    _               
+ 	|  _ \   ___ __   __ ___  | | _   _ | |_ (_)  ___   _ __  
+ 	| | | | / _ \\ \ / // _ \ | || | | || __|| | / _ \ | '_ \ 
+ 	| |_| ||  __/ \ V /| (_) || || |_| || |_ | || (_) || | | |
+ 	|____/  \___|  \_/  \___/ |_| \__,_| \__||_| \___/ |_| |_|    
