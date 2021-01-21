@@ -9,6 +9,7 @@ fn main() {
 
     let story: StoryPage = StoryPage::new_story_page(file_text);
     story.print_story_text();
+    story.print_story_choices();
     story.print_story_status();
 }
 

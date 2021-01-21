@@ -1,4 +1,5 @@
 use regex::Regex;
+use colored::*;
 
 pub struct StoryPage{
     pub text: String,
@@ -98,7 +99,14 @@ impl StoryPage{
     /*** Print Funcions ***/
     pub fn print_story_text(&self){
         print!("\x1bc");
-        println!("{}{}", "\x1b[1;1m", self.text);
+        println!("{}", self.text.bold());
+    }
+
+    pub fn print_story_choices(&self){
+        println!("{}", "Choices:".bold());
+        for i in 0..self.option_text.len(){
+            println!("{}", self.option_text[i].green().bold());
+        }
     }
 
     pub fn print_story_status(&self){
@@ -106,5 +114,4 @@ impl StoryPage{
         println!("Status");
         println!("Story Path: {:?}, Option Codes: {:?}", self.story_path, self.option_codes);
     }
-
 }
