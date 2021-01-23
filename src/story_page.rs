@@ -5,7 +5,8 @@ pub struct StoryPage{
     pub text: String,
     pub story_path: Vec<String>,
     pub option_codes: Vec<String>,
-    pub option_text: Vec<String>
+    pub option_text: Vec<String>,
+    pub selection_num: usize,
 }
 
 impl StoryPage{
@@ -14,8 +15,9 @@ impl StoryPage{
         let story_path: Vec<String> = Vec::new();
         let option_codes: Vec<String> = Vec::new();
         let option_text: Vec<String> = Vec::new();
+        let selection_num: usize = 0;
 
-        let mut story: StoryPage = StoryPage{text, story_path, option_codes, option_text};
+        let mut story: StoryPage = StoryPage{text, story_path, option_codes, option_text, selection_num};
 
         story = Self::update_story_path(story);
         story = Self::replace_codes(story);
@@ -66,6 +68,20 @@ impl StoryPage{
         story
     }
 
+    pub fn change_selected_option(mut self, change: i8) -> StoryPage{
+        if change == 1 && self.selection_num <= self.option_text.len(){
+            self.selection_num += 1;
+            self.print_story_text();
+            self.print_story_choices();
+        }
+        else if change == -1 && self.selection_num > 0{
+            self.selection_num -= 1;
+            self.print_story_text();
+            self.print_story_choices();
+        }
+        self
+    }
+
 
     /*** Supporting Functions (Non-Manipulation) ***/
     fn bracket_count(text: &str) -> usize {
@@ -103,9 +119,14 @@ impl StoryPage{
     }
 
     pub fn print_story_choices(&self){
-        println!("{}", "Choices:".bold());
+        println!("{}", "*** Choices ***".bold().italic());
         for i in 0..self.option_text.len(){
-            println!("{}", self.option_text[i].green().bold());
+            if i == self.selection_num{
+                println!("{}", self.option_text[i].green().bold());
+            } else{
+                println!("{}", self.option_text[i].bold());
+            }
+            
         }
     }
 
