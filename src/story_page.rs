@@ -1,5 +1,4 @@
 use regex::Regex;
-use colored::*;
 
 pub struct StoryPage{
     pub text: String,
@@ -69,15 +68,11 @@ impl StoryPage{
     }
 
     pub fn change_selected_option(mut self, change: i8) -> StoryPage{
-        if change == 1 && self.selection_num <= self.option_text.len(){
+        if change == 1 && self.selection_num < self.option_text.len() - 1{
             self.selection_num += 1;
-            self.print_story_text();
-            self.print_story_choices();
         }
         else if change == -1 && self.selection_num > 0{
             self.selection_num -= 1;
-            self.print_story_text();
-            self.print_story_choices();
         }
         self
     }
@@ -111,28 +106,4 @@ impl StoryPage{
         slice
     }
 
-
-    /*** Print Funcions ***/
-    pub fn print_story_text(&self){
-        print!("\x1bc");
-        println!("{}", self.text.bold());
-    }
-
-    pub fn print_story_choices(&self){
-        println!("{}", "*** Choices ***".bold().italic());
-        for i in 0..self.option_text.len(){
-            if i == self.selection_num{
-                println!("{}", self.option_text[i].green().bold());
-            } else{
-                println!("{}", self.option_text[i].bold());
-            }
-            
-        }
-    }
-
-    pub fn print_story_status(&self){
-        print!("\x1b[m");
-        println!("Status");
-        println!("Story Path: {:?}, Option Codes: {:?}", self.story_path, self.option_codes);
-    }
 }
