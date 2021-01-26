@@ -34,6 +34,14 @@ impl StoryPage{
 
     fn replace_codes(mut story: StoryPage) -> StoryPage {
         story.text = story.text.replace("[Name]", "Marcus");
+        story.text = story.text.replace("[Xe]", "he");
+        story.text = story.text.replace("[Xer]", "him");
+        story.text = story.text.replace("[Xis]", "his");
+        story.text = story.text.replace("[Xers]", "his");
+        story.text = story.text.replace("[Xself]", "himself");
+        story.text = story.text.replace("[Xther]", "brother");
+        story.text = story.text.replace("[Xm]", "em");
+        story.text = story.text.replace("[Xoy]", "boy");
         story
     }
 

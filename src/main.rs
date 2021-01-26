@@ -22,7 +22,7 @@ fn main() {
     // Opening title
     let title_file: String = String::from("Story/[TITLE].txt");
     let title: String = file_handler::open_file(title_file);
-    println!("{}", title.bold());
+    println!("{}{}", "\x1bc", title.bold());
     println!("\r 	{}{}{}\r", "Press ".bold().italic(), "Enter".bold().italic().green(), " to Start".bold().italic());
     
     // Opening and setting the story file
@@ -48,7 +48,8 @@ fn main() {
                     title_active = false;
                     print_story(&story);
                 } else {
-                    submit_option();
+                    story = submit_option(story);
+                    print_story(&story);
                 }
             },
             _ => (),
@@ -67,8 +68,13 @@ fn change_option(mut story: StoryPage, change: i8, title_active: bool) -> StoryP
 }
 
 // Submits option chosen by the user
-fn submit_option(){
-    println!("\rSubmit\r");
+fn submit_option(story: StoryPage) -> StoryPage{
+    println!("\rSubmit Selection: {}, {}\r", story.option_codes[story.selection_num], story.selection_num);
+    let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
+    println!("Next File: {}", filename);
+    let file_text: String = file_handler::open_text_file(filename);
+    let new_story: StoryPage = StoryPage::new_story_page(file_text);
+    new_story
 }
 
 // Printing the story to terminal
@@ -90,11 +96,11 @@ fn print_story(story: &StoryPage){
 /*** Supporting Print Functions (Remove when completed) ***/
 fn print_story_status(story: &StoryPage){
     print!("\x1b[m");
-    println!("Status");
-    println!("Current File: {:?}, Option Codes: {:?}", story.current_file, story.option_codes);
+    println!("\rStatus\r");
+    println!("\rCurrent File: {:?}, Option Codes: {:?}\r", story.current_file, story.option_codes);
 }
 
 // Type of Function, If I need it it's here
 fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
+    println!("\r{}\r", std::any::type_name::<T>())
 }

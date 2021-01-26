@@ -46,5 +46,5 @@ He steps out, standing just inside the edge of your protections where the Biofor
 A Bioform reaches out, through the barrier of your Aspect, and touches Rasputin’s face. As you watch it the green of its hand browns and wilts. Rasputin, quieter than before says, “Why.”
 
 They don’t answer.
-[CFinish]
+[Finish]
 [END]
