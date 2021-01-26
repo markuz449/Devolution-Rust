@@ -2,7 +2,7 @@ use regex::Regex;
 
 pub struct StoryPage{
     pub text: String,
-    pub story_path: Vec<String>,
+    pub current_file: String,
     pub option_codes: Vec<String>,
     pub option_text: Vec<String>,
     pub selection_num: usize,
@@ -11,23 +11,23 @@ pub struct StoryPage{
 impl StoryPage{
     /*** Manipulation Functions ***/
     pub fn new_story_page(text: String) -> StoryPage{
-        let story_path: Vec<String> = Vec::new();
+        let current_file: String = String::from("");
         let option_codes: Vec<String> = Vec::new();
         let option_text: Vec<String> = Vec::new();
         let selection_num: usize = 0;
 
-        let mut story: StoryPage = StoryPage{text, story_path, option_codes, option_text, selection_num};
+        let mut story: StoryPage = StoryPage{text, current_file, option_codes, option_text, selection_num};
 
-        story = Self::update_story_path(story);
+        story = Self::set_current_file(story);
         story = Self::replace_codes(story);
         story = Self::generate_choices(story);
         story
     }
 
-    fn update_story_path(mut story: StoryPage) -> StoryPage {
+    fn set_current_file(mut story: StoryPage) -> StoryPage {
         let start: usize = Self::find_indicies(&story.text, '[');
         let end: usize = Self::find_indicies(&story.text, ']');
-        story.story_path.push(Self::get_slice(&story.text, start, end + 1));
+        story.current_file = Self::get_slice(&story.text, start, end + 1);
         story = Self::remove_section(story, start, end);
         story
     }
@@ -39,7 +39,6 @@ impl StoryPage{
 
     fn generate_choices(mut story: StoryPage) -> StoryPage {
         let bracket_num: usize = Self::bracket_count(&story.text);
-        println!("Bracket num {}", bracket_num);
         let mut start: usize;
         let mut end: usize;
 
