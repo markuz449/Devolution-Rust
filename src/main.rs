@@ -47,7 +47,9 @@ fn main() {
                 if title_active{
                     title_active = false;
                     print_story(&story);
-                } else {
+                } else if story.game_over{
+                    println!("\rGame Over\r");
+                } else{
                     story = submit_option(story);
                     print_story(&story);
                 }
@@ -60,7 +62,7 @@ fn main() {
 
 // Changes current option and reprints story
 fn change_option(mut story: StoryPage, change: i8, title_active: bool) -> StoryPage{
-    if !title_active {
+    if !title_active && !story.game_over{
         story = story.change_selected_option(change);
         print_story(&story);
     }
@@ -82,12 +84,14 @@ fn print_story(story: &StoryPage){
     print!("\x1bc");
     println!("{}", story.text.bold());
 
-    println!("\r{}\r", "*** Choices ***".bold().italic());
-    for i in 0..story.option_text.len(){
-        if i == story.selection_num{
-            println!("\r{}\r", story.option_text[i].green().bold());
-        } else{
-            println!("\r{}\r", story.option_text[i].bold());
+    if !story.game_over{
+        println!("\r{}\r", "*** Choices ***".bold().italic());
+        for i in 0..story.option_text.len(){
+            if i == story.selection_num{
+                println!("\r{}\r", story.option_text[i].green().bold());
+            } else{
+                println!("\r{}\r", story.option_text[i].bold());
+            }
         }
     }
     println!("\r\n{}\r", "*** To Quit, press 'q' or 'Esc'. For Help, press 'h' ***".bold().italic());

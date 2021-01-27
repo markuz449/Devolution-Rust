@@ -6,6 +6,7 @@ pub struct StoryPage{
     pub option_codes: Vec<String>,
     pub option_text: Vec<String>,
     pub selection_num: usize,
+    pub game_over: bool,
 }
 
 impl StoryPage{
@@ -15,12 +16,15 @@ impl StoryPage{
         let option_codes: Vec<String> = Vec::new();
         let option_text: Vec<String> = Vec::new();
         let selection_num: usize = 0;
+        let game_over: bool = false;
 
-        let mut story: StoryPage = StoryPage{text, current_file, option_codes, option_text, selection_num};
+        let mut story: StoryPage = StoryPage{text, current_file, option_codes, option_text, selection_num, game_over};
 
         story = Self::set_current_file(story);
         story = Self::replace_codes(story);
-        story = Self::generate_choices(story);
+        if !story.game_over{
+            story = Self::generate_choices(story);
+        }
         story
     }
 
@@ -42,6 +46,13 @@ impl StoryPage{
         story.text = story.text.replace("[Xther]", "brother");
         story.text = story.text.replace("[Xm]", "em");
         story.text = story.text.replace("[Xoy]", "boy");
+
+        // Sets the game_over flag to true
+        if story.text.contains("[Game Over]"){
+            story.game_over = true;
+            story.text = story.text.replace("[Game Over]", "");
+            story.text = story.text.replace("[End]", "");
+        }
         story
     }
 
@@ -59,7 +70,7 @@ impl StoryPage{
             
             // Saves the option text
             // Checks if the end is reached
-            if story.option_codes.contains(&String::from("[END]")){
+            if story.option_codes.contains(&String::from("[End]")){
                 break;
             }
             end = Self::find_indicies(&story.text, '[') - 1;
