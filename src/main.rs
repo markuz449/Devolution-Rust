@@ -17,6 +17,7 @@ fn main() {
     let stdin = stdin();
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut title_active: bool = true;
+    let mut help_active: bool = false;
     let mut story_path: Vec<StoryPath> = Vec::new();
 
     // Opening title
@@ -36,7 +37,15 @@ fn main() {
             Key::Ctrl('c') => break,
             Key::Char('q') => break,
             Key::Esc => break,
-            Key::Char('h') => println!("\rHelp?!\r"),
+            Key::Char('h') => {
+                if help_active{
+                    help_active = false;
+                    print_story(&story);
+                } else{
+                    help_active = true;
+                    help();
+                }
+            },
             Key::Up => {
                 story = change_option(story, -1, title_active);
             },
@@ -44,20 +53,31 @@ fn main() {
                 story = change_option(story, 1, title_active);
             },
             Key::Char('\n') => {
+                if help_active{
+                    help_active = false;
+                    print_story(&story);
+                }
                 if title_active{
                     title_active = false;
                     print_story(&story);
-                } else if story.game_over{
-                    println!("\rGame Over\r");
+                } else if story.game_over {
+                    continue;
                 } else{
                     story = submit_option(story);
                     print_story(&story);
                 }
             },
-            _ => (),
+            _ => (if help_active{
+                    help_active = false;
+                    print_story(&story);
+                }),
         }
         stdout.flush().unwrap();
     }
+}
+
+fn help(){
+    println!("\r{} Help Menu Active\r", "\x1bc");   
 }
 
 // Changes current option and reprints story
@@ -71,9 +91,7 @@ fn change_option(mut story: StoryPage, change: i8, title_active: bool) -> StoryP
 
 // Submits option chosen by the user
 fn submit_option(story: StoryPage) -> StoryPage{
-    println!("\rSubmit Selection: {}, {}\r", story.option_codes[story.selection_num], story.selection_num);
     let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
-    println!("Next File: {}", filename);
     let file_text: String = file_handler::open_text_file(filename);
     let new_story: StoryPage = StoryPage::new_story_page(file_text);
     new_story
