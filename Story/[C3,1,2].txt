@@ -19,4 +19,4 @@ Rasputin smiles,“I don’t think you’re ready for that, Go home little [Xoy]
 [C1]The hands release you and you go,
 
 [C3,1,1]”Fuck that, I’m going to stop you” 
-[END]
+[End]

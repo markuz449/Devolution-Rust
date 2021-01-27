@@ -54,4 +54,4 @@ A Bioform reaches out, through the barrier of your Aspect, and touches Rasputinâ
 
 They donâ€™t answer,
 [Game Over]
-[END]
+[End]

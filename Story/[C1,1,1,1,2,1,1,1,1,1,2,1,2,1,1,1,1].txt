@@ -41,4 +41,4 @@ Rasputin interrupts, “Last time we didn’t have [Name] on our team, What happ
 [C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,1]“Me?” you say, “What can I do?”
 
 [C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,2]”Where are we going?” you ask, “What happened last time?”
-[END]
+[End]

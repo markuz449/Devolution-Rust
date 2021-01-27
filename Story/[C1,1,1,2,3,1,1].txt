@@ -37,4 +37,4 @@ Rasputin turns away from both you and the map and settles back into his chair be
 [C1,1,1,2,3,1,1,1]”OK,” You say, Rasputin lets out a breath and runs a hand through his hair,
 
 [C1,1,1,2,3,1,1,2]”I - No,” You say, “What are you talking about, There is nothing out there for us - The Factory is our only chance,”
-[END]
+[End]

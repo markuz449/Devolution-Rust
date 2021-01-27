@@ -21,4 +21,4 @@ Bioforms have started sprouting around the buildings, and the sky is clearing, Y
 [C1,1,1,1,2,3,1]Enter the forest of Bioforms, 
 
 [C1,1,1,1,2,3,2]Make your way back to the centre of the city where The Factory sits, You should be able to find your way home from there,
-[END]
+[End]

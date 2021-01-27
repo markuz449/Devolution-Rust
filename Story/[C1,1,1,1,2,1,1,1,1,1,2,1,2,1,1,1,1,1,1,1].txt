@@ -19,4 +19,4 @@ Greg nods and starts off in a direction with Patrick trailing behind, Ellie-May 
 Eve grabs you by the arm, and the two of you head off after Greg and Patrick,
 
 [C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1]Arrive,
-[END]
+[End]

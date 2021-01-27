@@ -11,4 +11,4 @@ Still, You don’t manage to pull yourself back to your feet until well after da
 [C1,1,1,1,2,1,2,1,1]Wander aimlessly,
 
 [C1,1,1,1,2,1,2,1,1]Wander purposefully,
-[END]
+[End]

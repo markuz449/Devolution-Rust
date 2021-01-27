@@ -27,4 +27,4 @@ Greg nods and starts off in a direction with Patrick trailing behind, Eve lets o
 Rasputin and Boss have already walked off, And then it is just the three of you,
 
 [C1,1,1,3,1,1,1,1,1,1,1,1]Arrive,
-[END]
+[End]

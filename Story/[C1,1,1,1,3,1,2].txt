@@ -11,4 +11,4 @@ It sits neatly in your hand and your finger settles automatically on a small lea
 [C1,1,1,1,3,1,2,1]Put it back and get the hell out of there,
 
 [C1,1,1,1,3,1,2,2]Looking into the tube thing at the end of the machine you pull the lever, You have no idea what this thing does and want to find out,
-[END]
+[End]

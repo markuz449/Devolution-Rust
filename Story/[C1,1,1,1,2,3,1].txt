@@ -23,4 +23,4 @@ Above you are more points of light than you can count,
 To think that your ancestors came from one of those stars - that they might be there still, It has been a long long time since humans came to Dirth, Most of the knowledge of those ancient people have been lost,
 
 [C1,1,1,1,2,3,1,1]Be eaten by a Bioform,
-[END]
+[End]
