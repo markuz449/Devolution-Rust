@@ -1,3 +1,6 @@
+mod file_handler;
+mod story_page;
+
 use std::io::*;
 use colored::*;
 use termion::{event::Key};
@@ -5,16 +8,15 @@ use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use story_page::StoryPage;
 
-mod file_handler;
-mod story_page;
-
+#[allow(dead_code)]
 struct GameState{
     story_path: Vec<StoryNode>,
+    planet: String,
     title: String,
     title_active: bool,
     terminal_width: usize,
 }
-
+#[allow(dead_code)]
 struct StoryNode{
     file_code: String,
     choice_num: usize,
@@ -30,11 +32,13 @@ fn main() {
     let terminal_width: usize = usize::from(terminal_size.0);
 
     // Opening title and sets game state
+    let planet_file: String = String::from("Story/[PLANET].txt");
+    let planet: String = file_handler::open_file(planet_file);
     let title_file: String = String::from("Story/[TITLE].txt");
     let title: String = file_handler::open_file(title_file);
     let title_active: bool = true;
     let story_path: Vec<StoryNode> = Vec::new();
-    let mut game_state: GameState = GameState{story_path, title, title_active, terminal_width};
+    let mut game_state: GameState = GameState{story_path, planet, title, title_active, terminal_width};
     
     // Opening the first story file
     let filename: String = String::from("Story/[C0].txt");
@@ -42,6 +46,7 @@ fn main() {
     let mut story: StoryPage = StoryPage::new_story_page(file_text);
 
     print_story(&story, &game_state);
+    //println!("{:?}", story.option_text);
 
     // Detecting keydown events
     for c in stdin.keys() {
@@ -166,7 +171,9 @@ fn submit_option(story: StoryPage, game_state: &GameState) -> StoryPage{
 // Printing the story to terminal
 fn print_story(story: &StoryPage, game_state: &GameState){
     if game_state.title_active {
-        println!("{}{}", "\x1bc", game_state.title.bold());
+        print!("{}", "\x1bc");
+        println!("{}", format!("{:^1$}", game_state.planet.bold().blue(), game_state.terminal_width));
+        println!("{}", format!("{:^1$}", game_state.title.bold().red(), game_state.terminal_width));
         println!("\r 	{}{}{}\r", "Press ".bold().italic(), "Enter".bold().italic().green(), " to Start".bold().italic());
     } else {
         print!("\x1bc");
@@ -188,13 +195,16 @@ fn print_story(story: &StoryPage, game_state: &GameState){
 }
 
 /*** Supporting Print Functions (Remove when completed) ***/
+#[allow(dead_code)]
 fn print_story_status(story: &StoryPage){
     print!("\x1b[m");
     println!("\rStatus\r");
     println!("\rCurrent File: {:?}, Option Codes: {:?}\r", story.current_file, story.option_codes);
+    println!("\rOption Text: {:?}", story.option_text);
 }
 
 // Type of Function, If I need it it's here
+#[allow(dead_code)]
 fn print_type_of<T>(_: &T) {
     println!("\r{}\r", std::any::type_name::<T>())
 }

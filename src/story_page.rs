@@ -28,14 +28,16 @@ impl StoryPage{
         story
     }
 
+    // Sets the curent file and removes the initial file code from the text
     fn set_current_file(mut story: StoryPage) -> StoryPage {
         let start: usize = Self::find_indicies(&story.text, '[');
         let end: usize = Self::find_indicies(&story.text, ']');
         story.current_file = Self::get_slice(&story.text, start, end + 1);
-        story = Self::remove_section(story, start, end);
+        story = Self::remove_section(story, start, end + 1);
         story
     }
 
+    // Replaces the codes in text file
     fn replace_codes(mut story: StoryPage) -> StoryPage {
         story.text = story.text.replace("[Name]", "Marcus");
         story.text = story.text.replace("[Xe]", "he");
@@ -66,7 +68,7 @@ impl StoryPage{
             start = Self::find_indicies(&story.text, '[');
             end = Self::find_indicies(&story.text, ']');
             story.option_codes.push(Self::get_slice(&story.text, start, end + 1));
-            story = Self::remove_section(story, start, end);
+            story = Self::remove_section(story, start, end + 1);
             
             // Saves the option text
             // Checks if the end is reached
@@ -74,14 +76,16 @@ impl StoryPage{
                 break;
             }
             end = Self::find_indicies(&story.text, '[') - 1;
-            story.option_text.push(Self::get_slice(&story.text, start, end));
-            story = Self::remove_section(story, start, end);
+            start = Self::find_start_line(&story.text, start);
+            end = Self::find_start_line(&story.text, end);
+            story.option_text.push(Self::get_slice(&story.text, start, end + 1));
+            story = Self::remove_section(story, start, end + 1);
         }
         story
     }
 
     fn remove_section(mut story: StoryPage, start: usize, end: usize) -> StoryPage {
-        story.text.replace_range(start..(end + 1), "");
+        story.text.replace_range(start..(end), "");
         story
     }
 
@@ -124,4 +128,34 @@ impl StoryPage{
         slice
     }
 
+    /** Sets the start index to be the start of the line, in ASCII: 
+     *  10 == '\n',
+     *  13 == '\r'
+     */
+    fn find_start_line(text: &str, mut start: usize) -> usize {
+        let byte_text: &[u8] = text.as_bytes();
+        while byte_text[start] != 13 && start > 0{
+            start -= 1;
+        }
+        start
+    }
+}
+
+#[cfg(test)]
+mod tests{
+    use crate::story_page::StoryPage;
+
+    #[test]
+    fn test_find_start_line(){
+        let text = "\r\n    [C1]Hello World";
+        let start: usize = StoryPage::find_indicies(text, '[');
+        assert_eq!(StoryPage::find_start_line(text, start), 0);
+    }
+
+    #[test]
+    fn test_fail_find_start_line(){
+        let text = "\n    [C1]Hello World";
+        let start: usize = StoryPage::find_indicies(text, '[');
+        assert_eq!(StoryPage::find_start_line(text, start), 0);
+    }
 }
