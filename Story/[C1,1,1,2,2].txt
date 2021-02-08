@@ -18,7 +18,7 @@ They can’t have spotted you, can they!? Than again, you are sure the pounding 
 
 “Shit” you say,
 
-[C1,1,1,2,1,1]You dart out of your hiding place, trying to run past them before they catch you,
 
+[C1,1,1,2,1,1]You dart out of your hiding place, trying to run past them before they catch you,
 [C1,1,1,2,3,1]Talk to them,
 [End]

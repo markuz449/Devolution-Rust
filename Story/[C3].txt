@@ -8,9 +8,8 @@ Her eyes haven’t left yours but she ignores your shouted question to answer hi
 
 “Piss off!” Eve yells back, finally breaking eye contact to turn her back on you in dismissal,
 
+
 [C3,1]You pull the knife on Eve and aim for the throat in a blind sweep of rage,
-
 [C3,2]You pull the knife on Eve but hesitate, She’s your sister, No matter what she’s done she won’t stop being your sister,
-
 [C1]You fuck off, seething, It isn’t worth causing a scene here, There are too many Vagabonds for you to win this fight,
 [End]

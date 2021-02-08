@@ -3,6 +3,5 @@
 You lay prone on the floor, the hole in your skull has been cauterised by the laser and does not bleed,
 
 You are dead,
-
 [Game Over]
 [End]

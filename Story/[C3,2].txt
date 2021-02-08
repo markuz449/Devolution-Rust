@@ -34,7 +34,7 @@ Rasputin explains Eve’s rude comment further, “Despite her method of communi
 
 Rasputin motions for you to follow, “I don’t think you’re ready for that, Go home little [Xoy]”
 
-[C1]The hands release you and you go,
 
+[C1]The hands release you and you go,
 [C3,1,1]”Fuck that, I’m going to stop you” 
 [End]

@@ -40,13 +40,12 @@ fn main() {
     let story_path: Vec<StoryNode> = Vec::new();
     let mut game_state: GameState = GameState{story_path, planet, title, title_active, terminal_width};
     
-    // Opening the first story file
+    // Opening the first story file 
     let filename: String = String::from("Story/[C0].txt");
     let file_text: String = file_handler::open_text_file(filename, terminal_width);
     let mut story: StoryPage = StoryPage::new_story_page(file_text);
 
     print_story(&story, &game_state);
-    //println!("{:?}", story.option_text);
 
     // Detecting keydown events
     for c in stdin.keys() {
@@ -184,13 +183,14 @@ fn print_story(story: &StoryPage, game_state: &GameState){
             println!("\r{}\r", format!("{:^1$}", "Choices".bold().italic().yellow(), game_state.terminal_width));
             for i in 0..story.option_text.len(){
                 if i == story.selection_num{
-                    println!("\r{}\r", story.option_text[i].blue().bold());
+                    print!("\r{}\r", story.option_text[i].blue().bold());
                 } else{
-                    println!("\r{}\r", story.option_text[i]);
+                    print!("\r{}\r", story.option_text[i]);
                 }
             }
         }
         println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'q' or 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
+        //print_story_status(&story);
     }
 }
 
@@ -198,9 +198,9 @@ fn print_story(story: &StoryPage, game_state: &GameState){
 #[allow(dead_code)]
 fn print_story_status(story: &StoryPage){
     print!("\x1b[m");
-    println!("\rStatus\r");
-    println!("\rCurrent File: {:?}, Option Codes: {:?}\r", story.current_file, story.option_codes);
-    println!("\rOption Text: {:?}", story.option_text);
+    println!("\rStatus:\r");
+    println!("\rCurrent File: {:?}, \n\rOption Codes: {:?}\r", story.current_file, story.option_codes);
+    //println!("\rStory Text: {:?}\r", story.text);
 }
 
 // Type of Function, If I need it it's here

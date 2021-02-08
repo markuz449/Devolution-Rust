@@ -134,7 +134,7 @@ impl StoryPage{
      */
     fn find_start_line(text: &str, mut start: usize) -> usize {
         let byte_text: &[u8] = text.as_bytes();
-        while byte_text[start] != 13 && start > 0{
+        while byte_text[start] != 10 && start > 0{
             start -= 1;
         }
         start

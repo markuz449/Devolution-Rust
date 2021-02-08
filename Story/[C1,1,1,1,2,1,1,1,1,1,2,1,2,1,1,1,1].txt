@@ -38,7 +38,7 @@ Ellie-May looks down at her plate, Eve has paused in her eating and is watching 
 
 Rasputin interrupts, “Last time we didn’t have [Name] on our team, What happened then won’t happen again,”
 
-[C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,1]“Me?” you say, “What can I do?”
 
+[C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,1]“Me?” you say, “What can I do?”
 [C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,2]”Where are we going?” you ask, “What happened last time?”
 [End]

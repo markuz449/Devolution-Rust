@@ -16,7 +16,6 @@ Eve salutes, “Can do,”
 
 Rasputin leaves the three of you to your food and heads back out into the main hall, You go back to eating,
 
+
 [C1,1,1,1,2,1,1,1,1,1,2,1,2,1,1,1,1,1,1]Leave with the party, You have a flytecraft to catch,
 [End]
-
- 

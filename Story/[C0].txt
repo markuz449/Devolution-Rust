@@ -40,7 +40,7 @@ It can’t be, Your sister,
 
 What is Eve doing?
 
-[C1]There is no point provoking this gang of bastards, You catch and hold your sister's eye before you turn around and walk away, There is always another route home,
 
+[C1]There is no point provoking this gang of bastards, You catch and hold your sister's eye before you turn around and walk away, There is always another route home,
 [C3]That fucking shit-head, What the hell is Eve doing with a bunch of traitorous rebels? Your hand clenches down on the flick knife in your pocket,
 [End]

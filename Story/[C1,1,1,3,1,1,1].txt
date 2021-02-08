@@ -6,9 +6,8 @@ You turn to look but before you catch a glimpse of their face a bag is shoved ov
 
 “[Name]? Eve what happened to [Name]?” you hear Liaba say, her voice growing more distant as you are dragged further from the site, 
 
+
 [C1,1,1,3,1,1,1,1]Struggle,
-
 [C1,1,1,3,1,1,1,2]Yell,
-
 [C1,1,1,3,1,1,1,3]Go limp,
 [End]
