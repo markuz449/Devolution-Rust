@@ -6,16 +6,16 @@ use termion::raw::IntoRawMode;
 
 use crate::story_page::StoryPage;
 use crate::file_handler;
-
-#[allow(dead_code)]
 struct GameState{
     story_path: Vec<StoryNode>,
+    re_read_mode: bool,
+    previous_story_num: usize,
+    current_story_point: String,
     planet: String,
     title: String,
     title_active: bool,
     terminal_width: usize,
 }
-#[allow(dead_code)]
 struct StoryNode{
     file_code: String,
     choice_num: usize,
@@ -30,6 +30,11 @@ pub fn game_loop() {
     let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
     let terminal_width: usize = usize::from(terminal_size.0);
 
+    // Opening the first story file 
+    let mut filename: String = String::from("Story/[C0].txt");
+    let mut file_text: String = file_handler::open_text_file(filename, terminal_width);
+    let mut story: StoryPage = StoryPage::new_story_page(file_text);
+
     // Opening title and sets game state
     let planet_file: String = String::from("Story/[PLANET].txt");
     let planet: String = file_handler::open_title_file(planet_file, terminal_width);
@@ -37,13 +42,12 @@ pub fn game_loop() {
     let title: String = file_handler::open_title_file(title_file, terminal_width);
     let title_active: bool = true;
     let story_path: Vec<StoryNode> = Vec::new();
-    let mut game_state: GameState = GameState{story_path, planet, title, title_active, terminal_width};
+    let re_read_mode: bool = false;
+    let previous_story_num: usize = 0;
+    let current_story_point: String = String::from(&story.current_file.clone());
+    let mut game_state: GameState = GameState{story_path, re_read_mode, previous_story_num, current_story_point, 
+        planet, title, title_active, terminal_width};
     
-    // Opening the first story file 
-    let mut filename: String = String::from("Story/[C0].txt");
-    let mut file_text: String = file_handler::open_text_file(filename, terminal_width);
-    let mut story: StoryPage = StoryPage::new_story_page(file_text);
-
     print_story(&story, &game_state);
 
     // Detecting keydown events
@@ -81,6 +85,7 @@ pub fn game_loop() {
                     print_story(&story, &game_state);
                 } else{
                     game_state.title_active = true;
+                    game_state.story_path.clear();
                     filename = String::from("Story/[C0].txt");
                     file_text = file_handler::open_text_file(filename, terminal_width);
                     story = StoryPage::new_story_page(file_text);
@@ -103,6 +108,28 @@ pub fn game_loop() {
                     story = change_option(story, 1, &game_state);
                 }
             },
+            Key::Left => {
+                if help_active{
+                    help_active = false;
+                    print_story(&story, &game_state);
+                } else {
+                    game_state = re_read(&story, game_state, true);
+                    if game_state.re_read_mode {
+                        story = open_previous_story(&game_state);
+                        print_story(&story, &game_state);
+                    }
+                }
+            },
+            Key::Right => {
+                if help_active{
+                    help_active = false;
+                    print_story(&story, &game_state);
+                } else {
+                    game_state = re_read(&story, game_state, false);
+                    story = open_previous_story(&game_state);
+                    print_story(&story, &game_state);
+                }
+            },
             Key::Char('\n') => {
                 if help_active{
                     help_active = false;
@@ -111,9 +138,10 @@ pub fn game_loop() {
                 else if game_state.title_active{
                     game_state.title_active = false;
                     print_story(&story, &game_state);
-                } else if story.game_over {
+                } else if story.game_over || game_state.re_read_mode{
                     continue;
                 } else{
+                    game_state = update_story_path(&story, game_state);
                     story = submit_option(story, &game_state);
                     print_story(&story, &game_state);
                 }
@@ -138,6 +166,7 @@ fn help(game_state: &GameState){
     let quit_control: ColoredString =     "Esc/q         Exit out of the game".italic();
     let help_control: ColoredString =     "h             Open the help menu".italic();
     let reset_control: ColoredString =    "r             Resets the game".italic();
+    let re_read_control: ColoredString =  "Left/Right    Go back and forth through the story".italic();
     let exit: ColoredString =             "  Press Any Key to return to the game  ".bold().green();
 
     // Printing the help screen
@@ -157,6 +186,7 @@ fn help(game_state: &GameState){
     println!("\r{}\r", format!("{:>1$}", quit_control, (width / 5) + quit_control.len()));
     println!("\r{}\r", format!("{:>1$}", help_control, (width / 5) + help_control.len()));
     println!("\r{}\r", format!("{:>1$}", reset_control, (width / 5) + reset_control.len()));
+    println!("\r{}\r", format!("{:>1$}", re_read_control, (width / 5) + re_read_control.len()));
     println!();
     println!();
     println!("\r{}\r", format!("{:^1$}", exit, width));
@@ -172,12 +202,61 @@ fn change_option(mut story: StoryPage, change: i8, game_state: &GameState) -> St
     story
 }
 
+// Updates the users story path
+fn update_story_path(story: &StoryPage, mut game_state: GameState) -> GameState{
+    let file_code: String = String::from(&story.current_file.clone());
+    let choice_num: usize = story.selection_num;
+    let node: StoryNode = StoryNode{file_code, choice_num};
+    game_state.story_path.push(node);
+    game_state
+}
+
 // Submits option chosen by the user
 fn submit_option(story: StoryPage, game_state: &GameState) -> StoryPage{
     let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
     let new_story: StoryPage = StoryPage::new_story_page(file_text);
     new_story
+}
+
+// Handles when the user wants to re-read a previous part of the story
+fn re_read(story: &StoryPage, mut game_state: GameState, go_back: bool) -> GameState{
+    // Ensures that there's a story path and the user isn't trying to go forward past the current story point
+    if game_state.story_path.len() == 0 || (!go_back && !game_state.re_read_mode){
+        return game_state
+    }
+
+    if !game_state.re_read_mode {
+        game_state.re_read_mode = true;
+        game_state.current_story_point = String::from(&story.current_file.clone());
+        game_state.previous_story_num = game_state.story_path.len() - 1;
+    } else {
+        // Going back and forth through the story and makes sure that the user doesn't overflow
+        if go_back && game_state.previous_story_num > 0 {
+            game_state.previous_story_num -= 1;
+        } else if !go_back {
+            game_state.previous_story_num += 1;
+        }
+
+        // When the user wants to go back to 
+        if game_state.previous_story_num >= game_state.story_path.len(){
+            game_state.re_read_mode = false;
+        }
+    }
+    game_state
+}
+
+// Opens up a previous part of the story
+fn open_previous_story(game_state: &GameState) -> StoryPage {
+    let filename: String;
+    if game_state.re_read_mode {
+        filename = format!("Story/{}.txt", &game_state.story_path[game_state.previous_story_num].file_code);
+    } else{
+        filename = format!("Story/{}.txt", &game_state.current_story_point);
+    }
+    let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
+    let previous_story: StoryPage = StoryPage::new_story_page(file_text);
+    previous_story
 }
 
 // Printing the story to terminal
@@ -193,7 +272,7 @@ fn print_story(story: &StoryPage, game_state: &GameState){
         println!("\r\n{}\r\n", format!("{:^1$}", "Devolution".bold().green(), game_state.terminal_width));
         println!("{}", story.text.italic());
 
-        if !story.game_over{
+        if !story.game_over && !game_state.re_read_mode {
             println!("\r{}\r", format!("{:^1$}", "Choices".bold().italic().yellow(), game_state.terminal_width));
             for i in 0..story.option_text.len(){
                 if i == story.selection_num{
@@ -202,19 +281,33 @@ fn print_story(story: &StoryPage, game_state: &GameState){
                     print!("\r{}\r", story.option_text[i].bold());
                 }
             }
+        } else if game_state.re_read_mode {
+            println!("\r{}\r", format!("{:^1$}", "Your Choice".bold().italic().yellow(), game_state.terminal_width));
+            let choice_num: usize = game_state.story_path[game_state.previous_story_num].choice_num;
+            print!("\r{}\r", story.option_text[choice_num].red().bold());
         }
+
         println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'q' or 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
-        //print_story_status(&story);
+        //print_story_status(&story, &game_state);
     }
 }
 
+
+
+
 /*** Supporting Print Functions (Remove when completed) ***/
 #[allow(dead_code)]
-fn print_story_status(story: &StoryPage){
+fn print_story_status(story: &StoryPage, game_state: &GameState){
     print!("\x1b[m");
     println!("\rStatus:\r");
     println!("\rCurrent File: {:?}, \n\rOption Codes: {:?}\r", story.current_file, story.option_codes);
-    //println!("\rStory Text: {:?}\r", story.text);
+    print!("\rCurrent Story Path: ");
+    for i in 0..game_state.story_path.len(){
+        print!("[{}, {}], ", game_state.story_path[i].file_code, game_state.story_path[i].choice_num);
+    }
+    print!("\n\rStatus of Re Read: {}\n\rStory Path Length: {}\n\rPrev Story Num: {}\r",
+    game_state.re_read_mode, game_state.story_path.len(), game_state.previous_story_num);
+    println!("\r");
 }
 
 // Type of Function, If I need it it's here
