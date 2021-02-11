@@ -1,11 +1,12 @@
 use std::io::*;
 use colored::*;
-use termion::{event::Key};
+use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 
 use crate::story_page::StoryPage;
 use crate::file_handler;
+
 struct GameState{
     story_path: Vec<StoryNode>,
     re_read_mode: bool,
@@ -25,6 +26,8 @@ pub fn game_loop() {
     let stdin = stdin();
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut help_active: bool = false;
+    let mut character_name: String = String::from("");
+    let mut character_creator: bool = false;
 
     // Getting the width of the terminal
     let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
@@ -52,104 +55,74 @@ pub fn game_loop() {
 
     // Detecting keydown events
     for c in stdin.keys() {
-        match c.unwrap() {
-            Key::Ctrl('c') => break,
-            Key::Char('q') => {
-                if help_active{
+        if character_creator{
+            match c.unwrap() {
+                Key::Ctrl('c') => break,
+                Key::Esc => break,
+                Key::Char('\n') => {
+                    println!("\n\rYour Name: {}\r", character_name);
+                    character_creator = false;
+                },
+                Key::Char(c) => {
+                    character_name.push(c);
+                    print!("\r{}", character_name);
+                },
+                _ => {},
+            }
+        } else if help_active{
+            match c.unwrap() {
+                _ => ({
                     help_active = false;
                     print_story(&story, &game_state);
-                } else{
-                    break;
-                }
-            },
-            Key::Esc => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else{
-                    break;
-                }
-            },
-            Key::Char('h') => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else{
+                }),
+            }
+        } else{
+            // Main game controls
+            match c.unwrap() {
+                Key::Ctrl('c') => break,
+                Key::Esc => break,
+                Key::Char('h') => {
                     help_active = true;
                     help(&game_state);
-                }
-            },
-            Key::Char('r') => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else{
+                },
+                Key::Char('r') => {
                     game_state.title_active = true;
                     game_state.story_path.clear();
                     filename = String::from("Story/[C0].txt");
                     file_text = file_handler::open_text_file(filename, terminal_width);
                     story = StoryPage::new_story_page(file_text);
                     print_story(&story, &game_state);
-                }
-            },
-            Key::Up => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else{
-                    story = change_option(story, -1, &game_state);
-                }
-            },
-            Key::Down => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else{
-                    story = change_option(story, 1, &game_state);
-                }
-            },
-            Key::Left => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else {
+                },
+                Key::Up => story = change_option(story, -1, &game_state),
+                
+                Key::Down => story = change_option(story, 1, &game_state),
+                
+                Key::Left => {
                     game_state = re_read(&story, game_state, true);
                     if game_state.re_read_mode {
                         story = open_previous_story(&game_state);
                         print_story(&story, &game_state);
                     }
-                }
-            },
-            Key::Right => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                } else {
+                },
+                Key::Right => {
                     game_state = re_read(&story, game_state, false);
                     story = open_previous_story(&game_state);
                     print_story(&story, &game_state);
-                }
-            },
-            Key::Char('\n') => {
-                if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                }
-                else if game_state.title_active{
-                    game_state.title_active = false;
-                    print_story(&story, &game_state);
-                } else if story.game_over || game_state.re_read_mode{
-                    continue;
-                } else{
-                    game_state = update_story_path(&story, game_state);
-                    story = submit_option(story, &game_state);
-                    print_story(&story, &game_state);
-                }
-            },
-            _ => (if help_active{
-                    help_active = false;
-                    print_story(&story, &game_state);
-                }),
+                },
+                Key::Char('\n') => {
+                    if game_state.title_active{
+                        game_state.title_active = false;
+                        print_story(&story, &game_state);
+                    } else if story.game_over || game_state.re_read_mode{
+                        continue;
+                    } else{
+                        game_state = update_story_path(&story, game_state);
+                        story = submit_option(story, &game_state);
+                        print_story(&story, &game_state);
+                    }
+                },
+                _ => (),
+            }
         }
         stdout.flush().unwrap();
     }
@@ -163,10 +136,10 @@ fn help(game_state: &GameState){
     let header: ColoredString =           "Key           Action".bold().blue();
     let enter_control: ColoredString =    "Enter         Continue the story with the selected option".italic();
     let up_down_control: ColoredString =  "Up/Down       Select your choice".italic();
-    let quit_control: ColoredString =     "Esc/q         Exit out of the game".italic();
+    let re_read_control: ColoredString =  "Left/Right    Go back and forth through the story".italic();
+    let quit_control: ColoredString =     "Esc           Exit out of the game".italic();
     let help_control: ColoredString =     "h             Open the help menu".italic();
     let reset_control: ColoredString =    "r             Resets the game".italic();
-    let re_read_control: ColoredString =  "Left/Right    Go back and forth through the story".italic();
     let exit: ColoredString =             "  Press Any Key to return to the game  ".bold().green();
 
     // Printing the help screen
@@ -183,10 +156,10 @@ fn help(game_state: &GameState){
     println!("\r{}\r", format!("{:>1$}", header, (width / 5) + header.len()));
     println!("\r{}\r", format!("{:>1$}", enter_control, (width / 5) + enter_control.len()));
     println!("\r{}\r", format!("{:>1$}", up_down_control, (width / 5) + up_down_control.len()));
+    println!("\r{}\r", format!("{:>1$}", re_read_control, (width / 5) + re_read_control.len()));
     println!("\r{}\r", format!("{:>1$}", quit_control, (width / 5) + quit_control.len()));
     println!("\r{}\r", format!("{:>1$}", help_control, (width / 5) + help_control.len()));
     println!("\r{}\r", format!("{:>1$}", reset_control, (width / 5) + reset_control.len()));
-    println!("\r{}\r", format!("{:>1$}", re_read_control, (width / 5) + re_read_control.len()));
     println!();
     println!();
     println!("\r{}\r", format!("{:^1$}", exit, width));
@@ -261,14 +234,13 @@ fn open_previous_story(game_state: &GameState) -> StoryPage {
 
 // Printing the story to terminal
 fn print_story(story: &StoryPage, game_state: &GameState){
+    print!("{}", "\x1bc");
     if game_state.title_active {
-        print!("{}", "\x1bc");
         println!("{}", format!("{:^1$}", game_state.planet.bold().blue(), game_state.terminal_width));
         println!("{}", format!("{:^1$}", game_state.title.bold().red(), game_state.terminal_width));
         let start_message: String = format!("{} {} {}", "Press".bold().italic(), "Enter".bold().italic().green(), "to Start".bold().italic());
         println!("\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + (start_message.len() / 2)));
     } else {
-        print!("\x1bc");
         println!("\r\n{}\r\n", format!("{:^1$}", "Devolution".bold().green(), game_state.terminal_width));
         println!("{}", story.text.italic());
 
@@ -287,7 +259,7 @@ fn print_story(story: &StoryPage, game_state: &GameState){
             print!("\r{}\r", story.option_text[choice_num].red().bold());
         }
 
-        println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'q' or 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
+        println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
         //print_story_status(&story, &game_state);
     }
 }
