@@ -1,8 +1,9 @@
 use std::io::*;
 use colored::*;
-use termion::event::Key;
+use termion::{event::Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
+use termion::cursor::HideCursor;
 
 use crate::story_page::StoryPage;
 use crate::file_handler;
@@ -17,6 +18,7 @@ struct GameState{
     title_active: bool,
     terminal_width: usize,
 }
+
 struct StoryNode{
     file_code: String,
     choice_num: usize,
@@ -29,7 +31,7 @@ pub struct Character{
 
 pub fn game_loop() {
     let stdin = stdin();
-    let mut stdout = stdout().into_raw_mode().unwrap();
+    let mut stdout = HideCursor::from(stdout().into_raw_mode().unwrap());
     let mut help_active: bool = false;
     let mut character_creator_active: bool = false;
 
@@ -61,6 +63,7 @@ pub fn game_loop() {
         planet, title, title_active, terminal_width};
     
     print_title(&game_state);
+    //writeln!(stdout, "Hello").unwrap();
 
     // Detecting keydown events
     for c in stdin.keys() {
@@ -129,7 +132,6 @@ pub fn game_loop() {
                 Key::Char('r') => {
                     game_state.title_active = true;
                     game_state.story_path.clear();
-                    character_creator_active = true;
                     print_title(&game_state);
                 },
                 Key::Up => {
@@ -147,7 +149,9 @@ pub fn game_loop() {
                 },
                 Key::Right => {
                     game_state = re_read(&story, game_state, false);
-                    story = open_previous_story(story, &game_state);
+                    if re_read_mode {
+                        story = open_previous_story(story, &game_state);
+                    }
                     print_story(&story, &game_state);
                 },
                 Key::Char('\n') => {
@@ -171,7 +175,7 @@ pub fn game_loop() {
 }
 
 // Prints the title sequence and the planet
-fn print_title(game_state: &GameState){
+fn print_title(game_state: &GameState) {
     print!("{}", "\x1bc");
     println!("{}", format!("{:^1$}", game_state.planet.bold().blue(), game_state.terminal_width));
     println!("{}", format!("{:^1$}", game_state.title.bold().red(), game_state.terminal_width));
@@ -201,7 +205,7 @@ fn print_story(story: &StoryPage, game_state: &GameState){
     }
 
     println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
-    //print_story_status(&story, &game_state);
+    print_story_status(&story, &game_state);
 }
 
 // Prints the Help menu for the game
@@ -279,6 +283,9 @@ fn print_character_creator(character: &Character, game_state: &GameState) {
     println!("\r{}\r", format!("{:^1$}", bottom_box, width));
     if no_name{
         println!("\r{}\r", format!("{:^1$}", name_error, width));
+        println!();
+    } else{
+        println!();
         println!();
     }
     println!();
@@ -372,6 +379,7 @@ fn print_story_status(story: &StoryPage, game_state: &GameState){
     }
     print!("\n\rStatus of Re Read: {}\n\rStory Path Length: {}\n\rPrev Story Num: {}\r",
     game_state.re_read_mode, game_state.story_path.len(), game_state.previous_story_num);
+    println!("\rCurrent Story Point: {}\r", game_state.current_story_point);
     println!("\r");
 }
 
