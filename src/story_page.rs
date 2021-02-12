@@ -1,5 +1,7 @@
 use regex::Regex;
+use crate::game_master::Character;
 
+#[derive(Debug, Default)]
 pub struct StoryPage{
     pub text: String,
     pub current_file: String,
@@ -7,18 +9,37 @@ pub struct StoryPage{
     pub option_text: Vec<String>,
     pub selection_num: usize,
     pub game_over: bool,
+    pub name: String,
+    pub is_girl: bool
 }
 
 impl StoryPage{
     /*** Manipulation Functions ***/
-    pub fn new_story_page(text: String) -> StoryPage{
+    // Generates the initial story page struct
+    pub fn initial_story_page(text: String, character: &Character) -> StoryPage{
         let current_file: String = String::from("");
         let option_codes: Vec<String> = Vec::new();
         let option_text: Vec<String> = Vec::new();
         let selection_num: usize = 0;
         let game_over: bool = false;
+        let name: String = String::from(&character.name.clone());
+        let is_girl: bool = character.is_girl;
 
-        let mut story: StoryPage = StoryPage{text, current_file, option_codes, option_text, selection_num, game_over};
+        let mut story: StoryPage = StoryPage{text, current_file, option_codes, option_text, selection_num, game_over, name, is_girl};
+
+        story = Self::set_current_file(story);
+        story = Self::replace_codes(story);
+        if !story.game_over{
+            story = Self::generate_choices(story);
+        }
+        story
+    }
+
+    // Updates the story page struct with current it's current text
+    pub fn new_story_page(mut story: StoryPage) -> StoryPage{
+        story.option_codes.clear();
+        story.option_text.clear();
+        story.selection_num = 0;
 
         story = Self::set_current_file(story);
         story = Self::replace_codes(story);
@@ -39,15 +60,26 @@ impl StoryPage{
 
     // Replaces the codes in text file
     fn replace_codes(mut story: StoryPage) -> StoryPage {
-        story.text = story.text.replace("[Name]", "Marcus");
-        story.text = story.text.replace("[Xe]", "he");
-        story.text = story.text.replace("[Xer]", "him");
-        story.text = story.text.replace("[Xis]", "his");
-        story.text = story.text.replace("[Xers]", "his");
-        story.text = story.text.replace("[Xself]", "himself");
-        story.text = story.text.replace("[Xther]", "brother");
-        story.text = story.text.replace("[Xm]", "em");
-        story.text = story.text.replace("[Xoy]", "boy");
+        story.text = story.text.replace("[Name]", &story.name);
+        if story.is_girl{
+            story.text = story.text.replace("[Xe]", "she");
+            story.text = story.text.replace("[Xer]", "her");
+            story.text = story.text.replace("[Xis]", "her");
+            story.text = story.text.replace("[Xers]", "hers");
+            story.text = story.text.replace("[Xself]", "herself");
+            story.text = story.text.replace("[Xther]", "sister");
+            story.text = story.text.replace("[Xm]", "er");
+            story.text = story.text.replace("[Xoy]", "girl");
+        } else {
+            story.text = story.text.replace("[Xe]", "he");
+            story.text = story.text.replace("[Xer]", "him");
+            story.text = story.text.replace("[Xis]", "his");
+            story.text = story.text.replace("[Xers]", "his");
+            story.text = story.text.replace("[Xself]", "himself");
+            story.text = story.text.replace("[Xther]", "brother");
+            story.text = story.text.replace("[Xm]", "em");
+            story.text = story.text.replace("[Xoy]", "boy");
+        }
 
         // Sets the game_over flag to true
         if story.text.contains("[Game Over]"){

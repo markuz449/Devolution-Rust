@@ -22,9 +22,9 @@ struct StoryNode{
     choice_num: usize,
 }
 
-struct Character{
-    name: String,
-    is_girl: bool,
+pub struct Character{
+    pub name: String,
+    pub is_girl: bool,
 }
 
 pub fn game_loop() {
@@ -42,10 +42,10 @@ pub fn game_loop() {
     let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
     let terminal_width: usize = usize::from(terminal_size.0);
 
-    // Opening the first story file 
-    let mut filename: String = String::from("Story/[C0].txt");
-    let mut file_text: String = file_handler::open_text_file(filename, terminal_width);
-    let mut story: StoryPage = StoryPage::new_story_page(file_text);
+    // Declaring the Story variables 
+    let mut filename: String;
+    let mut file_text: String;
+    let mut story: StoryPage = Default::default();
 
     // Opening title and sets game state
     let planet_file: String = String::from("Story/[PLANET].txt");
@@ -56,15 +56,16 @@ pub fn game_loop() {
     let story_path: Vec<StoryNode> = Vec::new();
     let re_read_mode: bool = false;
     let previous_story_num: usize = 0;
-    let current_story_point: String = String::from(&story.current_file.clone());
+    let current_story_point: String = String::from("");
     let mut game_state: GameState = GameState{story_path, re_read_mode, previous_story_num, current_story_point, 
         planet, title, title_active, terminal_width};
     
-    print_story(&story, &game_state);
+    print_title(&game_state);
 
     // Detecting keydown events
     for c in stdin.keys() {
         if character_creator_active{
+            // Controls for the character creator
             match c.unwrap() {
                 Key::Ctrl('c') => break,
                 Key::Esc => break,
@@ -81,6 +82,9 @@ pub fn game_loop() {
                         print_character_creator(&character, &game_state);
                     } else {
                         character_creator_active = false;
+                        filename = String::from("Story/[C0].txt");
+                        file_text = file_handler::open_text_file(filename, terminal_width);
+                        story = StoryPage::initial_story_page(file_text, &character);
                         print_story(&story, &game_state);
                     }
                 },
@@ -101,6 +105,7 @@ pub fn game_loop() {
                 _ => {},
             }
         } else if help_active{
+            // Controls for the help menu... which is anything
             match c.unwrap() {
                 _ => ({
                     help_active = false;
@@ -124,10 +129,8 @@ pub fn game_loop() {
                 Key::Char('r') => {
                     game_state.title_active = true;
                     game_state.story_path.clear();
-                    filename = String::from("Story/[C0].txt");
-                    file_text = file_handler::open_text_file(filename, terminal_width);
-                    story = StoryPage::new_story_page(file_text);
-                    print_story(&story, &game_state);
+                    character_creator_active = true;
+                    print_title(&game_state);
                 },
                 Key::Up => {
                     story = change_option(story, -1, &game_state);
@@ -138,13 +141,13 @@ pub fn game_loop() {
                 Key::Left => {
                     game_state = re_read(&story, game_state, true);
                     if game_state.re_read_mode {
-                        story = open_previous_story(&game_state);
+                        story = open_previous_story(story, &game_state);
                         print_story(&story, &game_state);
                     }
                 },
                 Key::Right => {
                     game_state = re_read(&story, game_state, false);
-                    story = open_previous_story(&game_state);
+                    story = open_previous_story(story, &game_state);
                     print_story(&story, &game_state);
                 },
                 Key::Char('\n') => {
@@ -165,6 +168,40 @@ pub fn game_loop() {
         }
         stdout.flush().unwrap();
     }
+}
+
+// Prints the title sequence and the planet
+fn print_title(game_state: &GameState){
+    print!("{}", "\x1bc");
+    println!("{}", format!("{:^1$}", game_state.planet.bold().blue(), game_state.terminal_width));
+    println!("{}", format!("{:^1$}", game_state.title.bold().red(), game_state.terminal_width));
+    let start_message: String = format!("{} {} {}", "Press".bold().italic(), "Enter".bold().italic().green(), "to Start".bold().italic());
+    println!("\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + (start_message.len() / 2)));
+}
+
+// Printing the story to terminal
+fn print_story(story: &StoryPage, game_state: &GameState){
+    print!("{}", "\x1bc");
+    println!("\r\n{}\r\n", format!("{:^1$}", "Devolution".bold().green(), game_state.terminal_width));
+    println!("{}", story.text.italic());
+
+    if !story.game_over && !game_state.re_read_mode {
+        println!("\r{}\r", format!("{:^1$}", "Choices".bold().italic().yellow(), game_state.terminal_width));
+        for i in 0..story.option_text.len(){
+            if i == story.selection_num{
+                print!("\r{}\r", story.option_text[i].blue().bold());
+            } else{
+                print!("\r{}\r", story.option_text[i].bold());
+            }
+        }
+    } else if game_state.re_read_mode {
+        println!("\r{}\r", format!("{:^1$}", "Your Choice".bold().italic().yellow(), game_state.terminal_width));
+        let choice_num: usize = game_state.story_path[game_state.previous_story_num].choice_num;
+        print!("\r{}\r", story.option_text[choice_num].red().bold());
+    }
+
+    println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
+    //print_story_status(&story, &game_state);
 }
 
 // Prints the Help menu for the game
@@ -272,11 +309,12 @@ fn update_story_path(story: &StoryPage, mut game_state: GameState) -> GameState{
 }
 
 // Submits option chosen by the user
-fn submit_option(story: StoryPage, game_state: &GameState) -> StoryPage{
+fn submit_option(mut story: StoryPage, game_state: &GameState) -> StoryPage{
     let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
-    let new_story: StoryPage = StoryPage::new_story_page(file_text);
-    new_story
+    story.text = file_text;
+    story = StoryPage::new_story_page(story);
+    story
 }
 
 // Handles when the user wants to re-read a previous part of the story
@@ -307,7 +345,7 @@ fn re_read(story: &StoryPage, mut game_state: GameState, go_back: bool) -> GameS
 }
 
 // Opens up a previous part of the story
-fn open_previous_story(game_state: &GameState) -> StoryPage {
+fn open_previous_story(mut story: StoryPage, game_state: &GameState) -> StoryPage {
     let filename: String;
     if game_state.re_read_mode {
         filename = format!("Story/{}.txt", &game_state.story_path[game_state.previous_story_num].file_code);
@@ -315,42 +353,10 @@ fn open_previous_story(game_state: &GameState) -> StoryPage {
         filename = format!("Story/{}.txt", &game_state.current_story_point);
     }
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
-    let previous_story: StoryPage = StoryPage::new_story_page(file_text);
-    previous_story
+    story.text = file_text;
+    story = StoryPage::new_story_page(story);
+    story
 }
-
-// Printing the story to terminal
-fn print_story(story: &StoryPage, game_state: &GameState){
-    print!("{}", "\x1bc");
-    if game_state.title_active {
-        println!("{}", format!("{:^1$}", game_state.planet.bold().blue(), game_state.terminal_width));
-        println!("{}", format!("{:^1$}", game_state.title.bold().red(), game_state.terminal_width));
-        let start_message: String = format!("{} {} {}", "Press".bold().italic(), "Enter".bold().italic().green(), "to Start".bold().italic());
-        println!("\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + (start_message.len() / 2)));
-    } else {
-        println!("\r\n{}\r\n", format!("{:^1$}", "Devolution".bold().green(), game_state.terminal_width));
-        println!("{}", story.text.italic());
-
-        if !story.game_over && !game_state.re_read_mode {
-            println!("\r{}\r", format!("{:^1$}", "Choices".bold().italic().yellow(), game_state.terminal_width));
-            for i in 0..story.option_text.len(){
-                if i == story.selection_num{
-                    print!("\r{}\r", story.option_text[i].blue().bold());
-                } else{
-                    print!("\r{}\r", story.option_text[i].bold());
-                }
-            }
-        } else if game_state.re_read_mode {
-            println!("\r{}\r", format!("{:^1$}", "Your Choice".bold().italic().yellow(), game_state.terminal_width));
-            let choice_num: usize = game_state.story_path[game_state.previous_story_num].choice_num;
-            print!("\r{}\r", story.option_text[choice_num].red().bold());
-        }
-
-        println!("\r\n{}\r", format!("{:^1$}", "To Quit, Press 'Esc'. For Help, Press 'h'".bold().italic().green(), game_state.terminal_width));
-        //print_story_status(&story, &game_state);
-    }
-}
-
 
 
 
