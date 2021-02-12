@@ -22,12 +22,21 @@ struct StoryNode{
     choice_num: usize,
 }
 
+struct Character{
+    name: String,
+    is_girl: bool,
+}
+
 pub fn game_loop() {
     let stdin = stdin();
     let mut stdout = stdout().into_raw_mode().unwrap();
     let mut help_active: bool = false;
-    let mut character_name: String = String::from("");
-    let mut character_creator: bool = false;
+    let mut character_creator_active: bool = false;
+
+    // Creating character struct
+    let name: String = String::from("");
+    let is_girl: bool = false;
+    let mut character: Character = Character{name, is_girl};
 
     // Getting the width of the terminal
     let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
@@ -55,17 +64,39 @@ pub fn game_loop() {
 
     // Detecting keydown events
     for c in stdin.keys() {
-        if character_creator{
+        if character_creator_active{
             match c.unwrap() {
                 Key::Ctrl('c') => break,
                 Key::Esc => break,
+                Key::Left => {
+                    character.is_girl = false;
+                    print_character_creator(&character, &game_state);
+                },
+                Key::Right => {
+                    character.is_girl = true;
+                    print_character_creator(&character, &game_state);
+                },
                 Key::Char('\n') => {
-                    println!("\n\rYour Name: {}\r", character_name);
-                    character_creator = false;
+                    if character.name.len() == 0{
+                        print_character_creator(&character, &game_state);
+                    } else {
+                        character_creator_active = false;
+                        print_story(&story, &game_state);
+                    }
+                },
+                Key::Backspace => {
+                    let name_length: usize = character.name.len();
+                    if name_length > 0{
+                        character.name.truncate(character.name.len() - 1);
+                        print_character_creator(&character, &game_state);
+                    }
                 },
                 Key::Char(c) => {
-                    character_name.push(c);
-                    print!("\r{}", character_name);
+                    let name_length: usize = character.name.len();
+                    if name_length < 20{
+                        character.name.push(c);
+                        print_character_creator(&character, &game_state);
+                    }
                 },
                 _ => {},
             }
@@ -76,14 +107,19 @@ pub fn game_loop() {
                     print_story(&story, &game_state);
                 }),
             }
-        } else{
+        } else {
             // Main game controls
             match c.unwrap() {
                 Key::Ctrl('c') => break,
-                Key::Esc => break,
+                Key::Esc => {
+                    print!("\x1bc");
+                    break
+                },
                 Key::Char('h') => {
-                    help_active = true;
-                    help(&game_state);
+                    if !title_active{
+                        help_active = true;
+                        help(&game_state);
+                    }
                 },
                 Key::Char('r') => {
                     game_state.title_active = true;
@@ -93,10 +129,12 @@ pub fn game_loop() {
                     story = StoryPage::new_story_page(file_text);
                     print_story(&story, &game_state);
                 },
-                Key::Up => story = change_option(story, -1, &game_state),
-                
-                Key::Down => story = change_option(story, 1, &game_state),
-                
+                Key::Up => {
+                    story = change_option(story, -1, &game_state);
+                },
+                Key::Down => {
+                    story = change_option(story, 1, &game_state);
+                },
                 Key::Left => {
                     game_state = re_read(&story, game_state, true);
                     if game_state.re_read_mode {
@@ -112,7 +150,8 @@ pub fn game_loop() {
                 Key::Char('\n') => {
                     if game_state.title_active{
                         game_state.title_active = false;
-                        print_story(&story, &game_state);
+                        character_creator_active = true;
+                        print_character_creator(&character, &game_state);
                     } else if story.game_over || game_state.re_read_mode{
                         continue;
                     } else{
@@ -145,10 +184,12 @@ fn help(game_state: &GameState){
     // Printing the help screen
     print!("\r{}\r", "\x1bc");
     println!();
+    println!();
+    println!();
     println!("\r{}\r", format!("{:^1$}", title, width));
     println!();
-    println!("\r{}\r", format!("{:^1$}", "Welcome to Devolution, a sci-fi adventure where you choose how".italic(), width));
-    println!("\r{}\r", format!("{:^1$}", "the player progresses!".italic(), width));
+    println!("\r{}\r", format!("{:^1$}", "Welcome to Devolution, a sci-fi adventure where you choose".italic(), width));
+    println!("\r{}\r", format!("{:^1$}", "how you progresses!".italic(), width));
     println!();
     println!();
     println!("\r{}\r", format!("{:^1$}", controls, width));
@@ -164,6 +205,52 @@ fn help(game_state: &GameState){
     println!();
     println!("\r{}\r", format!("{:^1$}", exit, width));
     print!("\r");
+}
+
+// Prints the Character creator
+fn print_character_creator(character: &Character, game_state: &GameState) {
+    let width: usize = game_state.terminal_width;
+    let no_name: bool = character.name.len() == 0;
+    let name: ColoredString = character.name.bold().blue();
+    let title: ColoredString =        "Create Your Character".bold().green();
+    let name_title: ColoredString =   "What is you name?".bold().yellow();
+    let top_box: ColoredString =      "╔════════════════════╗".bold();
+    let bottom_box: ColoredString =   "╚════════════════════╝".bold();
+    let name_box: String =    format!("              ║{:<20}║", name);
+    let name_error: ColoredString =   "Please enter a name before continuing!".bold().red();
+    let gender_title: ColoredString = "What is your gender?".bold().yellow();
+    let mut boy: ColoredString =      "Boy".bold();
+    let mut girl: ColoredString =     "Girl".bold();
+    if character.is_girl{
+        girl = girl.blue();
+    } else{
+        boy = boy.blue();
+    }
+    let gender_option: String = format!("{}        {}", boy, girl);
+    let confirm: ColoredString = "Press 'Enter' to continue with your character".bold().green();
+
+    // Printing the character creator screen
+    print!("\r{}\r", "\x1bc");
+    println!();
+    println!();
+    println!();
+    println!("\r{}\r", format!("{:^1$}", title, width));
+    println!();
+    println!("\r{}\r", format!("{:^1$}", name_title, width));
+    println!("\r{}\r", format!("{:^1$}", top_box, width));
+    println!("\r{}\r", format!("{:^1$}", name_box.bold(), width));
+    println!("\r{}\r", format!("{:^1$}", bottom_box, width));
+    if no_name{
+        println!("\r{}\r", format!("{:^1$}", name_error, width));
+        println!();
+    }
+    println!();
+    println!("\r{}\r", format!("{:^1$}", gender_title, width));
+    println!();
+    println!("\r{}\r", format!("{:^1$}", gender_option, width + (gender_option.len() / 2)));
+    println!();
+    println!("\r{}\r", format!("{:^1$}", confirm, width));
+    println!();
 }
 
 // Changes current option and reprints story
