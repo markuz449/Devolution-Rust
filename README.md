@@ -117,3 +117,7 @@ Project Link: [https://github.com/markuz449/Devolution-Rust](https://github.com/
 
 * [Rust Docs](https://doc.rust-lang.org/book/ch00-00-introduction.html)
 * [Choose an Open Source License](https://choosealicense.com)
+* [Termion](https://docs.rs/termion/1.5.6/termion/index.html)
+* [Termion Tutorial](http://ticki.github.io/blog/making-terminal-applications-in-rust-with-termion/)
+* [Std::fmt Docs](https://doc.rust-lang.org/std/fmt/)
+* [Rust Piping](https://www.reddit.com/r/rust/comments/38jhva/piping_string_to_child_process_stdin/)
