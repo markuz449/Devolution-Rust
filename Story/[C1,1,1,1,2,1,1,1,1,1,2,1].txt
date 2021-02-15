@@ -24,5 +24,5 @@ Some lanky dude steps in front of your group before Eve can get where she is hau
 
 
 [C1,1,1,1,2,1,1,1,1,1,2,1,1]You cut your sister off before she can reply again like you’re not in the fucking room. 
-[C1,1,1,1,2,1,1,1,1,1,2,1,2]”I don’t even know how the fuck I found him.” Eve replies. 
+[C1,1,1,1,2,1,1,1,1,1,2,1,2]“I don’t even know how the fuck I found him.” Eve replies. 
 [End]

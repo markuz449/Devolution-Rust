@@ -1,6 +1,6 @@
-[C1,1,1,2,3,1,1,1]”But I have questions.” You say. 
+[C1,1,1,2,3,1,1,1]“But I have questions.” You say. 
 
-“Of course.” He stands, ”I can answer anything you like but first - there are seven hours until we leave, if you want to rest, it may be best to do so now.” 
+“Of course.” He stands, “I can answer anything you like but first - there are seven hours until we leave, if you want to rest, it may be best to do so now.” 
 
 Boss ushers you out of the room and the three of you step back out into the din of the main hall. 
 
@@ -8,7 +8,7 @@ You glance back one more time as you leave to see Rasputin sitting back down in 
 
 You stop following Boss and she turns back to you when she notices “I’m not going to bed until I’ve seen Eve.” You say. 
 
-“That can be arranged. Patrick. Would you keep [Name] company while [Xe] waits? I myself would rather go to bed. . . It’s been a long night.”
+“That can be arranged. Patrick. Would you keep [Name] company while [Xe] waits? I myself would rather go to bed… It’s been a long night.”
 
 “Sure thing Boss.” He says. “How good are you at cards?”
 
@@ -34,7 +34,7 @@ She smirks. “I see you’ve met the local lads, Greg and Patrick. This here is
 
 Ellie-May grins at you, “Hi!”
 
-Greg lets out a wide yawn and blinks at you all. “I better get this one to bed,” Patrick says. “I’ll see all of you in the morning. Night. Greg and Patrick wander off. 
+Greg lets out a wide yawn and blinks at you all. “I better get this one to bed,” Patrick says. “I’ll see all of you in the morning. Night.” Greg and Patrick wander off. 
 
 “Honestly I could go for a nap myself,” Eve says. “Come on. Let’s find a bunk.”
 

@@ -28,7 +28,7 @@ She hums as if considering, “Nice try punk. If I let you up, are you going to 
 
 “Yeah?” Ellie-May says from much closer then Eve must have assumed she was. 
 
-“Oh. You’re right there. Could you keep an eye on [Name]. Don’t let [Xer] run away. You know the Boss won't like that. 
+“Oh. You’re right there. Could you keep an eye on [Name]. Don’t let [Xer] run away. You know the Boss won't like that.” 
 
 “Sure! I can do that. [Xe] doesn’t look like much anyway. Like, [Xe] couldn’t outrun you. Even I’m faster than you.”
 
@@ -52,5 +52,5 @@ Eve gets up off of you and you flip over. “Either way you’re coming with me.
 
 
 [C1,1,1,1,2,1,1,1,1,1,2,1]You sigh and get up off the ground. There is no point fighting her on this. 
-[C1,1,1,1,2,1,1,1,1,1,2,2]”Yeah there fucking is. I’m not going with you,” you say. 
+[C1,1,1,1,2,1,1,1,1,1,2,2]“Yeah there fucking is. I’m not going with you,” you say. 
 [End]

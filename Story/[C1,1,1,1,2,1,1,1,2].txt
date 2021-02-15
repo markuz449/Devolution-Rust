@@ -19,6 +19,6 @@ She groans and the girl behind her giggles. “Great. So I can’t just tell you
 “Great. A tag along. OK so, me and Ellie-May here have a job to do and you’re not going to ruin that for us.” She grabs you by the arm and pulls you after her. “Come with me.”
 
 
-[C1,1,1,1,2,1,1,1,1,1]”No. I can’t. I have to go home.” You say, “We’re going home. You’re coming with me” 
+[C1,1,1,1,2,1,1,1,1,1]“No. I can’t. I have to go home.” You say, “We’re going home. You’re coming with me” 
 [C1,1,1,1,2,1,1,1,1,2]Follow her. 
 [End]

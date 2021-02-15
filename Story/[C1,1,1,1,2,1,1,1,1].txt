@@ -23,6 +23,6 @@ Eve groans. “Why are you like this. Shit. OK. You’re coming with us then.”
 She stomps off in a direction you are sure is the opposite of where you want to go. 
 
 
-[C1,1,1,1,2,1,1,1,1,1]”No. I can’t. I have to go home.” You say, “We’re going home. You’re coming with me” 
+[C1,1,1,1,2,1,1,1,1,1]“No. I can’t. I have to go home.” You say, “We’re going home. You’re coming with me” 
 [C1,1,1,1,2,1,1,1,1,2]Follow her. 
 [End]

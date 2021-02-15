@@ -36,5 +36,5 @@ Rasputin motions for you to follow, “I don’t think you’re ready for that. 
 
 
 [C1]The hands release you and you go. 
-[C3,1,1]”Fuck that. I’m going to stop you” 
+[C3,1,1]“Fuck that. I’m going to stop you” 
 [End]

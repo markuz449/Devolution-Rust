@@ -35,6 +35,6 @@ You hesitate, not sure what to say. You are somewhat taken aback. What can you d
 Rasputin turns away from both you and the map and settles back into his chair behind the desk. “The only question is, is whether you will help me. There are six hours until our next chance for escape. Will you join us?” He asks from his seated position in front of you. 
 
 
-[C1,1,1,2,3,1,1,1]”OK.” You say, Rasputin lets out a breath and runs a hand through his hair. 
-[C1,1,1,2,3,1,1,2]”I - No.” You say. “What are you talking about. There is nothing out there for us - The Factory is our only chance.”
+[C1,1,1,2,3,1,1,1]“OK.” You say, Rasputin lets out a breath and runs a hand through his hair. 
+[C1,1,1,2,3,1,1,2]“I - No.” You say. “What are you talking about. There is nothing out there for us - The Factory is our only chance.”
 [End]

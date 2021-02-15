@@ -1,4 +1,4 @@
-[C1,1,1,1,2,1,2,1,1,2]”This is a nice surprise. I assume introductions are in order?” The leader of the Vagabonds, Rasputin, says. “This is Boss-” He points to a tall woman beside him who nods in your direction, face stern, “-Greg, Patrick-” He points to a large, gruff-looking man and the shorter lanky looking dude beside him. 
+[C1,1,1,1,2,1,2,1,1,2]“This is a nice surprise. I assume introductions are in order?” The leader of the Vagabonds, Rasputin, says. “This is Boss-” He points to a tall woman beside him who nods in your direction, face stern, “-Greg, Patrick-” He points to a large, gruff-looking man and the shorter lanky looking dude beside him. 
 
 The latter grins at you. “How do you do,” He says, shaking your hand vigorously. 
 
@@ -40,7 +40,7 @@ You scowl at her. “Shut up Eve.”
 
 “Wait. You guys have a flytecraft?” you ask, “We’re getting on a flytecraft?”
 
-“Yes.” Rasputin says, “Now might be a good time to debrief you actually. Those-” he points to a line of delivery drones, their trollies empty of packages, “are delivery drones, they come here every month or so in that flytecraft and deliver food and resources to the city. Our job here today is to follow them and find out where they are getting these good from. 
+“Yes.” Rasputin says, “Now might be a good time to debrief you actually. Those-” he points to a line of delivery drones, their trollies empty of packages, “are delivery drones, they come here every month or so in that flytecraft and deliver food and resources to the city. Our job here today is to follow them and find out where they are getting these good from.” 
 
 “In the best scenario, at the end of that flytecraft’s flight path will be another civilisation. Someone has to be providing us with food. For some reason, they have just never come here themselves. They have always just sent the flytecraft, empty apart from the robots.”
 
