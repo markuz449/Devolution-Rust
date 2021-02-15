@@ -1,9 +1,9 @@
-use std::io::*;
+use std::{io::*, ops::Add};
 use colored::*;
 use termion::{event::Key, raw::RawTerminal};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use termion::cursor::Hide;
+use termion::cursor::{Hide, Show};
 
 use crate::story_page::StoryPage;
 use crate::file_handler;
@@ -65,7 +65,6 @@ pub fn game_loop() {
         planet, title, title_active, terminal_width};
     
     stdout = write_title(&game_state, stdout);
-    //writeln!(stdout, "Hello").unwrap();
 
     // Detecting keydown events
     for c in stdin.keys() {
@@ -149,18 +148,18 @@ pub fn game_loop() {
                     }
                 },
                 Key::Left => {
-                    game_state = re_read(&story, game_state, true);
+                    game_state = re_read(&story, game_state, -1);
                     if game_state.re_read_mode {
                         story = open_previous_story(story, &game_state);
                         stdout = write_story(&story, &game_state, stdout);
                     }
                 },
                 Key::Right => {
-                    game_state = re_read(&story, game_state, false);
-                    if re_read_mode {
+                    if game_state.re_read_mode {
+                        game_state = re_read(&story, game_state, 1);
                         story = open_previous_story(story, &game_state);
+                        stdout = write_story(&story, &game_state, stdout);
                     }
-                    stdout = write_story(&story, &game_state, stdout);
                 },
                 Key::Char('\n') => {
                     if game_state.title_active{
@@ -180,6 +179,7 @@ pub fn game_loop() {
         }
         stdout.flush().unwrap();
     }
+    write!(stdout, "{}", Show).unwrap();
 }
 
 // Writes the title sequence and the planet to stdout
@@ -267,15 +267,24 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     let width: usize = game_state.terminal_width;
     let no_name: bool = character.name.len() == 0;
     let name: ColoredString = character.name.bold().blue();
-    let title: ColoredString =        "Create Your Character".bold().green();
-    let name_title: ColoredString =   "What is you name?".bold().yellow();
-    let top_box: ColoredString =      "╔════════════════════╗".bold();
-    let bottom_box: ColoredString =   "╚════════════════════╝".bold();
-    let name_box: String =    format!("              ║{:<20}║", name);
-    let name_error: ColoredString =   "Please enter a name before continuing!".bold().red();
-    let gender_title: ColoredString = "What is your gender?".bold().yellow();
-    let mut boy: ColoredString =      "Boy".bold();
-    let mut girl: ColoredString =     "Girl".bold();
+    let title: ColoredString =         "Create Your Character".bold().green();
+    let name_title: ColoredString =    "What is you name?".bold().yellow();
+    
+    let top_box: ColoredString =       "╔════════════════════╗".bold();
+    let bottom_box: ColoredString =    "╚════════════════════╝".bold();
+    let new_name: String =     format!("║{:<20}║", name);
+    let mut name_box_padding: usize = (top_box.len() - new_name.len()) / 2 + 1;
+    if width <= 51 {
+        let width_check: usize = (53 - width) / 2;
+        name_box_padding -= width_check;
+    }
+    let mut name_box: String = format!("{:<1$}", " ", name_box_padding);
+    name_box = name_box.add(&new_name);
+
+    let name_error: ColoredString =    "Please enter a name before continuing!".bold().red();
+    let gender_title: ColoredString =  "What is your gender?".bold().yellow();
+    let mut boy: ColoredString =       "Boy".bold();
+    let mut girl: ColoredString =      "Girl".bold();
     if character.is_girl{
         girl = girl.blue();
     } else{
@@ -332,9 +341,9 @@ fn submit_option(mut story: StoryPage, game_state: &GameState) -> StoryPage{
 }
 
 // Handles when the user wants to re-read a previous part of the story
-fn re_read(story: &StoryPage, mut game_state: GameState, go_back: bool) -> GameState{
+fn re_read(story: &StoryPage, mut game_state: GameState, direction: i8) -> GameState{
     // Ensures that there's a story path and the user isn't trying to go forward past the current story point
-    if game_state.story_path.len() == 0 || (!go_back && !game_state.re_read_mode){
+    if game_state.story_path.len() == 0 {
         return game_state
     }
 
@@ -344,9 +353,9 @@ fn re_read(story: &StoryPage, mut game_state: GameState, go_back: bool) -> GameS
         game_state.previous_story_num = game_state.story_path.len() - 1;
     } else {
         // Going back and forth through the story and makes sure that the user doesn't overflow
-        if go_back && game_state.previous_story_num > 0 {
+        if direction == -1 && game_state.previous_story_num > 0 {
             game_state.previous_story_num -= 1;
-        } else if !go_back {
+        } else if direction == 1 {
             game_state.previous_story_num += 1;
         }
 
@@ -384,8 +393,9 @@ fn print_story_status(story: &StoryPage, game_state: &GameState){
     for i in 0..game_state.story_path.len(){
         print!("[{}, {}], ", game_state.story_path[i].file_code, game_state.story_path[i].choice_num);
     }
-    print!("\n\rStatus of Re Read: {}\n\rStory Path Length: {}\n\rPrev Story Num: {}\r",
-    game_state.re_read_mode, game_state.story_path.len(), game_state.previous_story_num);
+    println!("\n\rStatus of Re Read: {}\r", game_state.re_read_mode); 
+    println!("\rStory Path Length: {}\r", game_state.story_path.len());
+    println!("\rPrev Story Num: {}\r", game_state.previous_story_num);
     println!("\rCurrent Story Point: {}\r", game_state.current_story_point);
     println!("\r");
 }
