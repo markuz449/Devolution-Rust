@@ -288,26 +288,29 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     let new_name: String =     format!("║{:<20}║", character.name);
     let name_error: String =   String::from("Please enter a name before continuing!");
     let gender_title: String = String::from("What is your gender?");
-    let boy: String =          String::from("Boy");
-    let girl: String =         String::from("Girl");
     let arrow: String =        String::from(">");
     let confirm: String =      String::from("Press 'Enter' to continue with your character");
-
+    let boy: String;
+    let girl: String;
     let gender_option: String;
     let name_box: String;
     
     if character.enter_name {
         name_box = format!("{:>8}{}{}{}{} ", " ", style::Blink, arrow, style::NoBlink, new_name);
-        gender_option = format!("{:>10}{}{}{:>12}{}", " ", color::Fg(color::White), boy, " ", girl);
+        boy = format!("{}{}", color::Fg(color::White), "Boy");
+        girl = format!("{}{}", color::Fg(color::White), "Girl");
+        gender_option = format!("{}{:>10}{}", boy, " ", girl);
     } else{
         name_box = format!("{}", new_name);
         if character.is_girl{
-            gender_option = format!("{:>27}{}{}{:>11}{}{}{}{}{}", " ", color::Fg(color::White), boy, " ", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink, girl);
+            boy = format!("{} Boy", color::Fg(color::White));
+            girl = format!("{}{}{}{}Girl", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink);
         } else{
-            gender_option = format!("{:>26}{}{}{}{}{}{:>12}{}{}", " ", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink, boy, " ", color::Fg(color::White), girl);
+            boy = format!("{}{}{}{}Boy", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink);
+            girl = format!("{} Girl", color::Fg(color::White));
         }
+        gender_option = format!(" {}{:>9}{}", boy,  " ", girl);
     }
-    
 
     // Printing the character creator screen
     write!(stdout, "\r{}{}\r", "\x1bc", style::Bold).unwrap();
@@ -336,7 +339,7 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", gender_title, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", gender_option, width)).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_option, width + gender_option.len()/2)).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", confirm, width)).unwrap();
     writeln!(stdout, "").unwrap();
