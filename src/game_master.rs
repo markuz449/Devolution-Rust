@@ -1,9 +1,10 @@
-use std::{io::*, ops::Add};
+use std::io::*;
 use colored::*;
 use termion::{event::Key, raw::RawTerminal};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use termion::cursor::{Hide, Show};
+use termion::{color, style};
 
 use crate::story_page::StoryPage;
 use crate::file_handler;
@@ -27,6 +28,7 @@ struct StoryNode{
 pub struct Character{
     pub name: String,
     pub is_girl: bool,
+    pub enter_name: bool,
 }
 
 type Out = RawTerminal<Stdout>;
@@ -40,7 +42,8 @@ pub fn game_loop() {
     // Creating character struct
     let name: String = String::from("");
     let is_girl: bool = false;
-    let mut character: Character = Character{name, is_girl};
+    let enter_name: bool = true;
+    let mut character: Character = Character{name, is_girl, enter_name};
 
     // Getting the width of the terminal
     let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
@@ -81,6 +84,18 @@ pub fn game_loop() {
                     character.is_girl = true;
                     stdout = write_character_creator(&character, &game_state, stdout);
                 },
+                Key::Up => {
+                    if !character.enter_name{
+                        character.enter_name = true;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    }
+                },
+                Key::Down => {
+                    if character.enter_name{
+                        character.enter_name = false;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    }
+                },
                 Key::Char('\n') => {
                     if character.name.len() == 0{
                         stdout = write_character_creator(&character, &game_state, stdout);
@@ -101,7 +116,7 @@ pub fn game_loop() {
                 },
                 Key::Char(c) => {
                     let name_length: usize = character.name.len();
-                    if name_length < 20{
+                    if name_length < 20 && c.is_alphabetic(){
                         character.name.push(c);
                         stdout = write_character_creator(&character, &game_state, stdout);
                     }
@@ -266,57 +281,64 @@ fn help(game_state: &GameState, mut stdout: Out) -> Out{
 fn write_character_creator(character: &Character, game_state: &GameState, mut stdout: Out) -> Out {
     let width: usize = game_state.terminal_width;
     let no_name: bool = character.name.len() == 0;
-    let name: ColoredString = character.name.bold().blue();
-    let title: ColoredString =         "Create Your Character".bold().green();
-    let name_title: ColoredString =    "What is you name?".bold().yellow();
-    
-    let top_box: ColoredString =       "╔════════════════════╗".bold();
-    let bottom_box: ColoredString =    "╚════════════════════╝".bold();
-    let new_name: String =     format!("║{:<20}║", name);
-    let mut name_box_padding: usize = (top_box.len() - new_name.len()) / 2 + 1;
-    if width <= 51 {
-        let width_check: usize = (53 - width) / 2;
-        name_box_padding -= width_check;
-    }
-    let mut name_box: String = format!("{:<1$}", " ", name_box_padding);
-    name_box = name_box.add(&new_name);
+    let title: String =        String::from("Create Your Character");
+    let name_title: String =   String::from("What is you name?");
+    let top_box: String =      String::from("╔════════════════════╗");
+    let bottom_box: String =   String::from("╚════════════════════╝");
+    let new_name: String =     format!("║{:<20}║", character.name);
+    let name_error: String =   String::from("Please enter a name before continuing!");
+    let gender_title: String = String::from("What is your gender?");
+    let boy: String =          String::from("Boy");
+    let girl: String =         String::from("Girl");
+    let arrow: String =        String::from(">");
+    let confirm: String =      String::from("Press 'Enter' to continue with your character");
 
-    let name_error: ColoredString =    "Please enter a name before continuing!".bold().red();
-    let gender_title: ColoredString =  "What is your gender?".bold().yellow();
-    let mut boy: ColoredString =       "Boy".bold();
-    let mut girl: ColoredString =      "Girl".bold();
-    if character.is_girl{
-        girl = girl.blue();
+    let gender_option: String;
+    let name_box: String;
+    
+    if character.enter_name {
+        name_box = format!("{:>8}{}{}{}{} ", " ", style::Blink, arrow, style::NoBlink, new_name);
+        gender_option = format!("{:>10}{}{}{:>12}{}", " ", color::Fg(color::White), boy, " ", girl);
     } else{
-        boy = boy.blue();
+        name_box = format!("{}", new_name);
+        if character.is_girl{
+            gender_option = format!("{:>27}{}{}{:>11}{}{}{}{}{}", " ", color::Fg(color::White), boy, " ", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink, girl);
+        } else{
+            gender_option = format!("{:>26}{}{}{}{}{}{:>12}{}{}", " ", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink, boy, " ", color::Fg(color::White), girl);
+        }
     }
-    let gender_option: String = format!("{}        {}", boy, girl);
-    let confirm: ColoredString = "Press 'Enter' to continue with your character".bold().green();
+    
 
     // Printing the character creator screen
-    write!(stdout, "\r{}\r", "\x1bc").unwrap();
+    write!(stdout, "\r{}{}\r", "\x1bc", style::Bold).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", title, width)).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", title, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", name_title, width)).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", top_box, width)).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", name_box.bold(), width)).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", bottom_box, width)).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", name_title, width)).unwrap();
+    if character.enter_name{
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", top_box, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", name_box, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", bottom_box, width)).unwrap();
+    } else {
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", top_box, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", name_box, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", bottom_box, width)).unwrap();
+    }
     if no_name{
-        writeln!(stdout, "\r{}\r", format!("{:^1$}", name_error, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Red), format!("{:^1$}", name_error, width)).unwrap();
         writeln!(stdout, "").unwrap();
     } else{
         writeln!(stdout, "").unwrap();
         writeln!(stdout, "").unwrap();
     }
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_title, width)).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", gender_title, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_option, width + (gender_option.len() / 2))).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", gender_option, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", confirm, width)).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", confirm, width)).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "{}", Hide).unwrap();
     stdout

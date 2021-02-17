@@ -121,3 +121,4 @@ Project Link: [https://github.com/markuz449/Devolution-Rust](https://github.com/
 * [Termion Tutorial](http://ticki.github.io/blog/making-terminal-applications-in-rust-with-termion/)
 * [Std::fmt Docs](https://doc.rust-lang.org/std/fmt/)
 * [Rust Piping](https://www.reddit.com/r/rust/comments/38jhva/piping_string_to_child_process_stdin/)
+* [The Grue](https://en.wikipedia.org/wiki/Grue_(monster))
