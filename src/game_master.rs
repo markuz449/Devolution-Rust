@@ -332,7 +332,6 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
         writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", confirm, width)).unwrap();
     }
     writeln!(stdout, "{}", Hide).unwrap();
-    writeln!(stdout, "\rTop: {}\n\rMid: {}\n\rBot: {}\r", character.enter_name_active, character.gender_active, character.continue_active).unwrap();
     stdout
 }
 
