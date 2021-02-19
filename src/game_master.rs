@@ -26,8 +26,10 @@ struct StoryNode{
 
 pub struct Character{
     pub name: String,
+    pub enter_name_active: bool,
     pub is_girl: bool,
-    pub enter_name_mode: bool,
+    pub gender_active: bool,
+    pub continue_active: bool,
 }
 
 type Out = RawTerminal<Stdout>;
@@ -40,13 +42,14 @@ pub fn game_loop() {
 
     // Creating character struct
     let name: String = String::from("");
+    let enter_name_active: bool = true;
     let is_girl: bool = false;
-    let enter_name_mode: bool = true;
-    let mut character: Character = Character{name, is_girl, enter_name_mode: enter_name_mode};
+    let gender_active: bool = false;
+    let continue_active: bool = false;
+    let mut character: Character = Character{name, enter_name_active, is_girl, gender_active, continue_active};
 
     // Getting the width of the terminal
-    let terminal_size = termion::terminal_size().ok().expect("Failed to get terminal size");
-    let terminal_width: usize = usize::from(terminal_size.0);
+    let terminal_width: usize = usize::from(termion::terminal_size().unwrap().0);
 
     // Declaring the Story variables 
     let mut filename: String;
@@ -76,29 +79,50 @@ pub fn game_loop() {
                 Key::Ctrl('c') => break,
                 Key::Esc => break,
                 Key::Left => {
-                    character.is_girl = false;
-                    stdout = write_character_creator(&character, &game_state, stdout);
+                    if character.gender_active {
+                        character.is_girl = false;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    }
                 },
                 Key::Right => {
-                    character.is_girl = true;
-                    stdout = write_character_creator(&character, &game_state, stdout);
+                    if character.gender_active {
+                        character.is_girl = true;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    }
                 },
                 Key::Up => {
-                    if !character.enter_name_mode{
-                        character.enter_name_mode = true;
+                    if character.continue_active{
+                        character.continue_active = false;
+                        character.gender_active = true;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    } else if character.gender_active{
+                        character.gender_active = false;
+                        character.enter_name_active = true;
                         stdout = write_character_creator(&character, &game_state, stdout);
                     }
                 },
                 Key::Down => {
-                    if character.enter_name_mode{
-                        character.enter_name_mode = false;
+                    if character.enter_name_active{
+                        character.enter_name_active = false;
+                        character.gender_active = true;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    } else if character.gender_active{
+                        character.gender_active = false;
+                        character.continue_active = true;
                         stdout = write_character_creator(&character, &game_state, stdout);
                     }
                 },
                 Key::Char('\n') => {
-                    if character.name.len() == 0 || character.enter_name_mode {
+                    if character.enter_name_active {
+                        character.enter_name_active = false;
+                        character.gender_active = true;
                         stdout = write_character_creator(&character, &game_state, stdout);
-                    } else {
+                    } else if character.gender_active {
+                        character.gender_active = false;
+                        character.continue_active = true;
+                        stdout = write_character_creator(&character, &game_state, stdout);
+                    }
+                    else if character.name.len() != 0 && character.continue_active {
                         character_creator_active = false;
                         filename = String::from("Story/[C0].txt");
                         file_text = file_handler::open_text_file(filename, terminal_width);
@@ -107,17 +131,21 @@ pub fn game_loop() {
                     }
                 },
                 Key::Backspace => {
-                    let name_length: usize = character.name.len();
-                    if name_length > 0{
-                        character.name.truncate(character.name.len() - 1);
-                        stdout = write_character_creator(&character, &game_state, stdout);
+                    if character.enter_name_active{
+                        let name_length: usize = character.name.len();
+                        if name_length > 0{
+                            character.name.truncate(character.name.len() - 1);
+                            stdout = write_character_creator(&character, &game_state, stdout);
+                        }
                     }
                 },
                 Key::Char(c) => {
-                    let name_length: usize = character.name.len();
-                    if name_length < 20 && c.is_alphabetic(){
-                        character.name.push(c);
-                        stdout = write_character_creator(&character, &game_state, stdout);
+                    if character.enter_name_active{
+                        let name_length: usize = character.name.len();
+                        if name_length < 20 && c.is_alphabetic(){
+                            character.name.push(c);
+                            stdout = write_character_creator(&character, &game_state, stdout);
+                        }
                     }
                 },
                 _ => {},
@@ -191,6 +219,8 @@ pub fn game_loop() {
                 _ => (),
             }
         }
+
+        game_state.terminal_width = usize::from(termion::terminal_size().unwrap().0);
         stdout.flush().unwrap();
     }
     write!(stdout, "{}", Show).unwrap();
@@ -203,7 +233,7 @@ fn write_title(game_state: &GameState, mut stdout: Out) -> Out{
     writeln!(stdout, "{}{}", color::Fg(color::Red), format!("{:^1$}", game_state.title, game_state.terminal_width)).unwrap();
     writeln!(stdout, "{}{}", color::Fg(color::LightWhite), style::Italic).unwrap();
     let start_message: String = format!("{} {}{}{} {}", "Press", color::Fg(color::Green), "Enter", color::Fg(color::LightWhite), "to Start");
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + (start_message.len() / 2))).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + 17)).unwrap();
     writeln!(stdout, "{}", Hide).unwrap();
     stdout
 }
@@ -212,36 +242,52 @@ fn write_title(game_state: &GameState, mut stdout: Out) -> Out{
 fn write_character_creator(character: &Character, game_state: &GameState, mut stdout: Out) -> Out {
     let width: usize = game_state.terminal_width;
     let no_name: bool = character.name.len() == 0;
-    let title: String =        String::from("Create Your Character");
-    let name_title: String =   String::from("What is you name?");
-    let top_box: String =      String::from("╔════════════════════╗");
-    let bottom_box: String =   String::from("╚════════════════════╝");
-    let new_name: String =     format!("║{:<20}║", character.name);
-    let name_error: String =   String::from("Please enter a name before continuing!");
-    let gender_title: String = String::from("What is your gender?");
-    let arrow: String =        String::from(">");
-    let gender_error: String = String::from("Please select a gender before continuing!");
-    let confirm: String =      String::from("Press 'Enter' to continue with your character");
+    let title: String =         String::from("Create Your Character");
+    let name_title: String =    String::from("What is you name?");
+    let top_box: String =       String::from("╔════════════════════╗");
+    let bottom_box: String =    String::from("╚════════════════════╝");
+    let new_name: String =      format!("║{:<20}║", character.name);
+    let name_error: String =    String::from("Please enter a name before continuing!");
+    let gender_title: String =  String::from("What is your gender?");
+    let arrow: String =         format!("{}{}{}{}", color::Fg(color::Blue), style::Blink, ">", style::NoBlink);
+    let confirm_title: String = String::from("Continue with your character?");
+    let mut confirm: String =   String::from("Continue");
     let boy: String;
     let girl: String;
     let gender_option: String;
     let name_box: String;
     
-    if character.enter_name_mode {
-        name_box = format!("{:>8}{}{}{}{} ", " ", style::Blink, arrow, style::NoBlink, new_name);
-        boy = format!("{}{}", color::Fg(color::White), "Boy");
-        girl = format!("{}{}", color::Fg(color::White), "Girl");
+    if character.enter_name_active {
+        name_box = format!("{}{} ", arrow, new_name);
+        if character.is_girl{
+            boy = format!("{}Boy", color::Fg(color::White));
+            girl = format!("{}Girl", color::Fg(color::Green));
+        } else{
+            boy = format!("{}Boy", color::Fg(color::Green));
+            girl = format!("{}Girl", color::Fg(color::White));
+        }
         gender_option = format!("{}{:>10}{}", boy, " ", girl);
-    } else{
+    } else if character.gender_active {
         name_box = format!("{}", new_name);
         if character.is_girl{
             boy = format!("{} Boy", color::Fg(color::White));
-            girl = format!("{}{}{}{}Girl", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink);
+            girl = format!("{}{}Girl", color::Fg(color::Blue), arrow);
         } else{
-            boy = format!("{}{}{}{}Boy", color::Fg(color::Blue), style::Blink, arrow, style::NoBlink);
+            boy = format!("{}{}Boy", color::Fg(color::Blue), arrow);
             girl = format!("{} Girl", color::Fg(color::White));
         }
         gender_option = format!(" {}{:>9}{}", boy, " ", girl);
+    } else {
+        name_box = format!("{}", new_name);
+        if character.is_girl{
+            boy = format!("{}Boy", color::Fg(color::White));
+            girl = format!("{}Girl", color::Fg(color::Green));
+        } else{
+            boy = format!("{}Boy", color::Fg(color::Green));
+            girl = format!("{}Girl", color::Fg(color::White));
+        }
+        gender_option = format!("{}{:>10}{}", boy, " ", girl);
+        confirm = format!("{}{}", arrow, confirm);
     }
 
     // Printing the character creator screen
@@ -252,9 +298,9 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", title, width)).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", name_title, width)).unwrap();
-    if character.enter_name_mode{
+    if character.enter_name_active{
         writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", top_box, width)).unwrap();
-        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", name_box, width)).unwrap();
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", name_box, width + 18)).unwrap();
         writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", bottom_box, width)).unwrap();
     } else {
         writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", top_box, width)).unwrap();
@@ -271,16 +317,22 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", gender_title, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_option, width + gender_option.len()/2)).unwrap();
-    if character.enter_name_mode{
-        writeln!(stdout, "\r{}{}\r", color::Fg(color::Red), format!("{:^1$}", gender_error, width)).unwrap();
-    } else{
-        writeln!(stdout, "").unwrap();
+    if character.gender_active{
+        writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_option, width + (gender_option.len() / 2) + 6)).unwrap();
+    } else {
+        writeln!(stdout, "\r{}\r", format!("{:^1$}", gender_option, width + gender_option.len() / 2)).unwrap();
     }
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", confirm, width)).unwrap();
     writeln!(stdout, "").unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", confirm_title, width)).unwrap();
+    writeln!(stdout, "").unwrap();
+    if character.continue_active{
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:^1$}", confirm, width + 16)).unwrap();
+    } else{
+        writeln!(stdout, "\r{}{}\r", color::Fg(color::White), format!("{:^1$}", confirm, width)).unwrap();
+    }
     writeln!(stdout, "{}", Hide).unwrap();
+    writeln!(stdout, "\rTop: {}\n\rMid: {}\n\rBot: {}\r", character.enter_name_active, character.gender_active, character.continue_active).unwrap();
     stdout
 }
 
@@ -339,14 +391,14 @@ fn help(game_state: &GameState, mut stdout: Out) -> Out{
     writeln!(stdout, "{}{}", style::NoItalic, color::Fg(color::Yellow)).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:^1$}", controls, width)).unwrap();
     writeln!(stdout, "").unwrap();
-    writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:>1$}", header, (width / 5) + header.len())).unwrap();
+    writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:>1$}", header, (width / 3) + header.len())).unwrap();
     writeln!(stdout, "{}{}", style::Italic, color::Fg(color::White)).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", enter_control, (width / 5) + enter_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", up_down_control, (width / 5) + up_down_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", re_read_control, (width / 5) + re_read_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", quit_control, (width / 5) + quit_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", help_control, (width / 5) + help_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", reset_control, (width / 5) + reset_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", enter_control, (width / 3) + enter_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", up_down_control, (width / 3) + up_down_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", re_read_control, (width / 3) + re_read_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", quit_control, (width / 3) + quit_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", help_control, (width / 3) + help_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", reset_control, (width / 3) + reset_control.len())).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}{}\r", style::NoItalic, color::Fg(color::Green), format!("{:^1$}", exit, width)).unwrap();
