@@ -269,10 +269,10 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     let bottom_box: String =    String::from("╚════════════════════╝");
     let name_error: String =    String::from("Please enter a name before continuing!");
     let gender_title: String =  String::from("What is your gender?");
-    let arrow: String =         format!("{}{}{}{}", color::Fg(color::Blue), style::Blink, ">", style::NoBlink);
+    let arrow: String =         format!("{}{}{}{}", color::Fg(color::Blue), style::Blink, "> ", style::NoBlink);
     let confirm_title: String = String::from("Continue with your character?");
     let mut confirm: String =   String::from("Continue");
-    let name_box_offset: usize = 18;
+    let name_box_offset: usize = 17;
     let new_name: String;
     let name_box: String;
     let boy: String;
@@ -289,18 +289,19 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
             boy = format!("{}Boy", color::Fg(color::Magenta));
             girl = format!("{}Girl", color::Fg(color::White));
         }
-        gender_option = format!("{}{:>10}{}", boy, " ", girl);
+        gender_option = format!("{}{:>9}{}", boy, " ", girl);
     } else if character.gender_active {
         new_name = format!("║{}{:<20}{}║", color::Fg(color::Magenta), character.name, color::Fg(color::White));
         name_box = format!("{}", new_name);
         if character.is_girl{
-            boy = format!("{} Boy", color::Fg(color::White));
+            boy = format!("{}  Boy", color::Fg(color::White));
             girl = format!("{}{}Girl", color::Fg(color::Blue), arrow);
+            gender_option = format!(" {}{:>7}{}", boy, " ", girl);
         } else{
             boy = format!("{}{}Boy", color::Fg(color::Blue), arrow);
             girl = format!("{} Girl", color::Fg(color::White));
+            gender_option = format!(" {}{:>8}{}", boy, " ", girl);
         }
-        gender_option = format!(" {}{:>9}{}", boy, " ", girl);
     } else {
         new_name = format!("║{}{:<20}{}║", color::Fg(color::Magenta), character.name, color::Fg(color::White));
         name_box = format!("{}", new_name);
@@ -311,7 +312,7 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
             boy = format!("{}Boy", color::Fg(color::Magenta));
             girl = format!("{}Girl", color::Fg(color::White));
         }
-        gender_option = format!("{}{:>10}{}", boy, " ", girl);
+        gender_option = format!("{}{:>9}{}", boy, " ", girl);
         confirm = format!("{}{}", arrow, confirm);
     }
 
