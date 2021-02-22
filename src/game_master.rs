@@ -18,6 +18,7 @@ struct GameState{
     title: String,
     title_active: bool,
     terminal_width: usize,
+    terminal_height: usize,
 }
 
 struct StoryNode{
@@ -57,7 +58,9 @@ pub fn game_loop() {
     };
 
     // Getting the width of the terminal
-    let terminal_width: usize = usize::from(termion::terminal_size().unwrap().0);
+    let terminal_size: (u16, u16) = termion::terminal_size().unwrap();
+    let terminal_width: usize = usize::from(terminal_size.0);
+    let terminal_height: usize = usize::from(terminal_size.1);
 
     // Declaring the Story variables 
     let mut filename: String;
@@ -86,7 +89,8 @@ pub fn game_loop() {
         planet_2,
         title, 
         title_active, 
-        terminal_width
+        terminal_width,
+        terminal_height
     };
     
     stdout = write_title(&game_state, stdout);
@@ -241,6 +245,7 @@ pub fn game_loop() {
         }
 
         game_state.terminal_width = usize::from(termion::terminal_size().unwrap().0);
+        game_state.terminal_height = usize::from(termion::terminal_size().unwrap().1);
         stdout.flush().unwrap();
     }
     write!(stdout, "{}", Show).unwrap();
@@ -249,13 +254,35 @@ pub fn game_loop() {
 // Writes the title sequence and the planet to stdout
 fn write_title(game_state: &GameState, mut stdout: Out) -> Out{
     write!(stdout, "{}{}", "\x1bc", style::Bold).unwrap();
-    write!(stdout, "{}{}", color::Fg(color::Blue), format!("{:^1$}", game_state.planet_1, game_state.terminal_width)).unwrap();
-    writeln!(stdout, "{}{}", color::Fg(color::Red), format!("{:^1$}", game_state.title, game_state.terminal_width)).unwrap();
-    write!(stdout, "{}{}", color::Fg(color::Blue), format!("{:^1$}", game_state.planet_2, game_state.terminal_width)).unwrap();
+    if game_state.terminal_width >= 77 {
+        let mut center_height: usize = game_state.terminal_height.checked_sub(41).unwrap_or_default();
+        center_height = center_height.checked_div(2).unwrap_or_default();
+        for _i in 0..center_height{
+            writeln!(stdout, "").unwrap();
+        }
+        write!(stdout, "{}{}", color::Fg(color::Blue), format!("{:^1$}", game_state.planet_1, game_state.terminal_width)).unwrap();
+        writeln!(stdout, "{}{}", color::Fg(color::Red), format!("{:^1$}", game_state.title, game_state.terminal_width)).unwrap();
+        write!(stdout, "{}{}", color::Fg(color::Blue), format!("{:^1$}", game_state.planet_2, game_state.terminal_width)).unwrap();
+    } else if game_state.terminal_width >= 59 {
+        let mut center_height: usize = game_state.terminal_height.checked_sub(8).unwrap_or_default();
+        center_height = center_height.checked_div(2).unwrap_or_default(); 
+        for _i in 0..center_height {
+            writeln!(stdout, "").unwrap();
+        }
+        writeln!(stdout, "{}{}", color::Fg(color::Red), format!("{:^1$}", game_state.title, game_state.terminal_width)).unwrap();
+    } else {
+        let mut center_height: usize = game_state.terminal_height.checked_sub(3).unwrap_or_default();
+        center_height = center_height.checked_div(2).unwrap_or_default(); 
+        for _i in 0..center_height {
+            writeln!(stdout, "").unwrap();
+        }
+        writeln!(stdout, "{}{}", color::Fg(color::Red), format!("{:^1$}", "Devolution", game_state.terminal_width)).unwrap();
+    }
     write!(stdout, "{}{}", color::Fg(color::LightWhite), style::Italic).unwrap();
     let start_message: String = format!("{} {}{}{} {}", "Press", color::Fg(color::Green), "Enter", color::Fg(color::LightWhite), "to Start");
     writeln!(stdout, "\r{}\r", format!("{:^1$}", start_message, game_state.terminal_width + 17)).unwrap();
     writeln!(stdout, "{}", Hide).unwrap();
+    
     stdout
 }
 
@@ -318,9 +345,11 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
 
     // Printing the character creator screen
     write!(stdout, "\r{}{}\r", "\x1bc", style::Bold).unwrap();
-    writeln!(stdout, "").unwrap();
-    writeln!(stdout, "").unwrap();
-    writeln!(stdout, "").unwrap();
+    let mut center_height: usize = game_state.terminal_height.checked_sub(17).unwrap_or_default();
+    center_height = center_height.checked_div(2).unwrap_or_default(); 
+    for _i in 0..center_height {
+        writeln!(stdout, "").unwrap();
+    }
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", title, width)).unwrap();
     writeln!(stdout, "").unwrap();
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", name_title, width)).unwrap();
@@ -405,9 +434,11 @@ fn help(game_state: &GameState, mut stdout: Out) -> Out{
 
     // Printing the help screen
     write!(stdout, "\r{}{}\r", "\x1bc", style::Bold).unwrap();
-    writeln!(stdout, "").unwrap();
-    writeln!(stdout, "").unwrap();
-    writeln!(stdout, "").unwrap();
+    let mut center_height: usize = game_state.terminal_height.checked_sub(19).unwrap_or_default();
+    center_height = center_height.checked_div(2).unwrap_or_default(); 
+    for _i in 0..center_height {
+        writeln!(stdout, "").unwrap();
+    }
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Green), format!("{:^1$}", title, width)).unwrap();
     writeln!(stdout, "{}{}", style::Italic, color::Fg(color::White)).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:^1$}", "Welcome to Devolution, a sci-fi adventure where you choose", width)).unwrap();
