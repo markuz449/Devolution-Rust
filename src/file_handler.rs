@@ -7,7 +7,7 @@ use termion::input::TermRead;
 pub fn open_title_file(filename: String, terminal_width: usize) -> String {
     let mut file = File::open(&filename).ok().expect("Failed to open file");
     let line_length: usize = file.read_line().unwrap().expect("Failed to get first line").len();
-    let title_width: usize = terminal_width - line_length;
+    let title_width: usize = terminal_width.checked_sub(line_length).unwrap_or_default();
 
     let mut pr = Command::new("pr")
         .args(&["-t", "-o", &(title_width / 2).to_string()])

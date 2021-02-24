@@ -38,9 +38,7 @@ impl StoryPage {
 
         story = Self::set_current_file(story);
         story = Self::replace_codes(story);
-        if !story.game_over {
-            story = Self::generate_choices(story);
-        }
+        story = Self::generate_choices(story);
         story
     }
 
@@ -52,9 +50,7 @@ impl StoryPage {
 
         story = Self::set_current_file(story);
         story = Self::replace_codes(story);
-        if !story.game_over {
-            story = Self::generate_choices(story);
-        }
+        story = Self::generate_choices(story);
         story
     }
 

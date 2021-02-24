@@ -175,7 +175,7 @@ pub fn game_loop() {
                 _ => {},
             }
         } else if help_active{
-            // Controls for the help menu... which is anything
+            // Controls for the help menu
             match c.unwrap() {
                 _ => ({
                     help_active = false;
@@ -193,10 +193,21 @@ pub fn game_loop() {
                 Key::Char('h') => {
                     if !game_state.title_active{
                         help_active = true;
-                        stdout = help(&game_state, stdout);
+                        stdout = write_help(&game_state, stdout);
+                    }
+                },
+                Key::Char('H') => {
+                    if !game_state.title_active{
+                        help_active = true;
+                        stdout = write_help(&game_state, stdout);
                     }
                 },
                 Key::Char('r') => {
+                    game_state.title_active = true;
+                    game_state.story_path.clear();
+                    stdout = write_title(&game_state, stdout);
+                },
+                Key::Char('R') => {
                     game_state.title_active = true;
                     game_state.story_path.clear();
                     stdout = write_title(&game_state, stdout);
@@ -395,7 +406,7 @@ fn write_story(story: &StoryPage, game_state: &GameState, mut stdout: Out) -> Ou
     write!(stdout, "{}{}", "\x1bc", style::Bold).unwrap();
     writeln!(stdout, "\r\n{}{}\r\n", color::Fg(color::Green), format!("{:^1$}", "Devolution", game_state.terminal_width)).unwrap();
     writeln!(stdout, "{}{}{}", color::Fg(color::White), style::Italic, story.text).unwrap();
-    writeln!(stdout, "{}", style::NoItalic).unwrap();
+    write!(stdout, "{}", style::NoItalic).unwrap();
 
     if !story.game_over && !game_state.re_read_mode {
         writeln!(stdout, "\r{}{}\r", color::Fg(color::Yellow), format!("{:^1$}", "Choices", game_state.terminal_width)).unwrap();
@@ -411,26 +422,33 @@ fn write_story(story: &StoryPage, game_state: &GameState, mut stdout: Out) -> Ou
         let choice_num: usize = game_state.story_path[game_state.previous_story_num].choice_num;
         write!(stdout, "\r{}{}\r", color::Fg(color::Red), story.option_text[choice_num]).unwrap();
     }
-
-    writeln!(stdout, "\r\n{}{}\r", color::Fg(color::Green), format!("{:^1$}", "To Quit, Press 'Esc'. For Help, Press 'h'", game_state.terminal_width)).unwrap();
+    if story.game_over && !game_state.re_read_mode {
+        writeln!(stdout, "\r\n{}{}\r", color::Fg(color::Magenta), format!("{:^1$}", "GAME OVER", game_state.terminal_width)).unwrap();
+        writeln!(stdout, "\r{}\r", color::Fg(color::Green)).unwrap();
+        writeln!(stdout, "{}", format!("{:^1$}", "Press 'R' to Restart or Press 'Esc' to Quit", game_state.terminal_width)).unwrap();
+    } else if game_state.re_read_mode {
+        writeln!(stdout, "\r\n{}{}\r", color::Fg(color::Green), format!("{:^1$}", "Press ← or → to go back through the Story", game_state.terminal_width)).unwrap();
+    } else {
+        writeln!(stdout, "\r\n{}{}\r", color::Fg(color::Green), format!("{:^1$}", "Press 'H' for Help/Controls or Press 'Esc' to Quit", game_state.terminal_width)).unwrap();
+    }
     writeln!(stdout, "{}", Hide).unwrap();
     //print_story_status(&story, &game_state);
     stdout
 }
 
 // Writes the Help menu for the game
-fn help(game_state: &GameState, mut stdout: Out) -> Out{
+fn write_help(game_state: &GameState, mut stdout: Out) -> Out{
     let width: usize = game_state.terminal_width;
     let title: String =           String::from("Help Menu");
     let controls: String =        String::from("Controls:");
-    let header: String =          String::from("Key           Action");
-    let enter_control: String =   String::from("Enter         Continue the story with the selected option");
-    let up_down_control: String = String::from("Up/Down       Select your choice");
-    let re_read_control: String = String::from("Left/Right    Go back and forth through the story");
-    let quit_control: String =    String::from("Esc           Exit out of the game");
-    let help_control: String =    String::from("h             Open the help menu");
-    let reset_control: String =   String::from("r             Resets the game");
-    let exit: String =            String::from("Press Any Key to return to the game");
+    let header: String =          String::from("Key        Action");
+    let enter_control: String =   String::from("Enter      Continue the story with the selected option");
+    let up_down_control: String = String::from("↑/↓        Select your choice");
+    let re_read_control: String = String::from("←/→        Go back and forth through the story");
+    let quit_control: String =    String::from("Esc        Exit out of the game");
+    let help_control: String =    String::from("h          Open the help menu");
+    let reset_control: String =   String::from("r          Resets the game");
+    let exit: String =            String::from("Press 'Any Key' to return to the game");
 
     // Printing the help screen
     write!(stdout, "\r{}{}\r", "\x1bc", style::Bold).unwrap();
@@ -450,8 +468,8 @@ fn help(game_state: &GameState, mut stdout: Out) -> Out{
     writeln!(stdout, "\r{}{}\r", color::Fg(color::Blue), format!("{:>1$}", header, (width / 3) + header.len())).unwrap();
     writeln!(stdout, "{}{}", style::Italic, color::Fg(color::White)).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:>1$}", enter_control, (width / 3) + enter_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", up_down_control, (width / 3) + up_down_control.len())).unwrap();
-    writeln!(stdout, "\r{}\r", format!("{:>1$}", re_read_control, (width / 3) + re_read_control.len())).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", up_down_control, (width / 3) + up_down_control.len() - 4)).unwrap();
+    writeln!(stdout, "\r{}\r", format!("{:>1$}", re_read_control, (width / 3) + re_read_control.len() - 4)).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:>1$}", quit_control, (width / 3) + quit_control.len())).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:>1$}", help_control, (width / 3) + help_control.len())).unwrap();
     writeln!(stdout, "\r{}\r", format!("{:>1$}", reset_control, (width / 3) + reset_control.len())).unwrap();
