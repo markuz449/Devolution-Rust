@@ -8,6 +8,18 @@ use termion::{color, style};
 use crate::story_page::StoryPage;
 use crate::file_handler;
 
+/// Holds all the information about the game and its current state.
+///
+/// Struct Details:
+/// * Story_Path holds the file codes of what choices the user made.
+/// * Re_Read_Mode tells the program if the user is re-reading through the story.
+/// * The Previous_Story_Num points to the index of where the user is going bak through the story.
+/// * The Current_Story_Point is the file code of the current story.
+/// * Planets 1 & 2 are the planet strings, stored so that they can be re-printed on reset.
+/// * Title is title string, stored so that it can be re-printed on reset.
+/// * Title_Active tells the program if the title is currently active.
+/// * Terminal_Width is the width of the current terminal.
+/// * Terminal_Height is the height of the current terminal.
 struct GameState{
     story_path: Vec<StoryNode>,
     re_read_mode: bool,
@@ -21,11 +33,24 @@ struct GameState{
     terminal_height: usize,
 }
 
+/// A node for each story point that the user has been through.
+///
+/// Struct Details:
+/// * File_Code is the file code of the current story.
+/// * Choice_Num is the number of what choice the user made.
 struct StoryNode{
     file_code: String,
     choice_num: usize,
 }
 
+/// Holds the current information about the users created character.
+///
+/// Struct Details:
+/// * Name is current name of the users character.
+/// * Enter_Name_Active tells the program if the naming segement of the character creator is currently active.
+/// * Is_Girl is boolean value for is the character is a boy or girl, true for a girl and false for a boy.
+/// * Gender_Active tells the program if the gender segement of the character creator is currently active.
+/// * Continue_Active tells the program if the continue of the character creator is currently active.
 pub struct Character{
     pub name: String,
     pub enter_name_active: bool,
@@ -34,8 +59,11 @@ pub struct Character{
     pub continue_active: bool,
 }
 
+/// Used to represent the stdout type used throughout the program.
 type Out = RawTerminal<Stdout>;
 
+/// The main game loop of game.
+/// The loop sets up the story structs and the user input.
 pub fn game_loop() {
     let stdin = stdin();
     let mut stdout: Out = stdout().into_raw_mode().unwrap();
@@ -262,7 +290,7 @@ pub fn game_loop() {
     write!(stdout, "{}", Show).unwrap();
 }
 
-// Writes the title sequence and the planet to stdout
+/// Writes the Title to stdout.
 fn write_title(game_state: &GameState, mut stdout: Out) -> Out{
     write!(stdout, "{}{}", "\x1bc", style::Bold).unwrap();
     if game_state.terminal_width >= 77 {
@@ -297,7 +325,9 @@ fn write_title(game_state: &GameState, mut stdout: Out) -> Out{
     stdout
 }
 
-// Writes the Character creator
+/// Writes the Character Creator to stdout.
+/// Highlights the current active segment in blue.
+/// The current selected options are highlighted in magenta.
 fn write_character_creator(character: &Character, game_state: &GameState, mut stdout: Out) -> Out {
     let width: usize = game_state.terminal_width;
     let no_name: bool = character.name.len() == 0;
@@ -401,7 +431,8 @@ fn write_character_creator(character: &Character, game_state: &GameState, mut st
     stdout
 }
 
-// Writes the story page to stdout
+/// Writes the current Story Page to stdout.
+/// The current selected choice are highlighted in blue.
 fn write_story(story: &StoryPage, game_state: &GameState, mut stdout: Out) -> Out{
     write!(stdout, "{}{}", "\x1bc", style::Bold).unwrap();
     writeln!(stdout, "\r\n{}{}\r\n", color::Fg(color::Green), format!("{:^1$}", "Devolution", game_state.terminal_width)).unwrap();
@@ -436,7 +467,7 @@ fn write_story(story: &StoryPage, game_state: &GameState, mut stdout: Out) -> Ou
     stdout
 }
 
-// Writes the Help menu for the game
+/// Writes the Help Menu for the game.
 fn write_help(game_state: &GameState, mut stdout: Out) -> Out{
     let width: usize = game_state.terminal_width;
     let title: String =           String::from("Help Menu");
@@ -481,7 +512,7 @@ fn write_help(game_state: &GameState, mut stdout: Out) -> Out{
     stdout
 }
 
-// Updates the users story path
+/// Updates the users story path with the current story page code when the user makes a choice.
 fn update_story_path(story: &StoryPage, mut game_state: GameState) -> GameState{
     let file_code: String = String::from(&story.current_file.clone());
     let choice_num: usize = story.selection_num;
@@ -490,7 +521,8 @@ fn update_story_path(story: &StoryPage, mut game_state: GameState) -> GameState{
     game_state
 }
 
-// Submits option chosen by the user
+/// Submits the current selected option by the user.
+/// Then opens the new story page that the user selected.
 fn submit_option(mut story: StoryPage, game_state: &GameState) -> StoryPage{
     let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
@@ -499,7 +531,8 @@ fn submit_option(mut story: StoryPage, game_state: &GameState) -> StoryPage{
     story
 }
 
-// Handles when the user wants to re-read a previous part of the story
+/// Handles when the user wants to re-read a previous part of the story.
+/// Keeps track of where the user is when ging back through the story page.
 fn re_read(story: &StoryPage, mut game_state: GameState, direction: i8) -> GameState{
     // Ensures that there's a story path and the user isn't trying to go forward past the current story point
     if game_state.story_path.len() == 0 {
@@ -526,7 +559,7 @@ fn re_read(story: &StoryPage, mut game_state: GameState, direction: i8) -> GameS
     game_state
 }
 
-// Opens up a previous part of the story
+/// Opens up a previous part of the story.
 fn open_previous_story(mut story: StoryPage, game_state: &GameState) -> StoryPage {
     let filename: String;
     if game_state.re_read_mode {

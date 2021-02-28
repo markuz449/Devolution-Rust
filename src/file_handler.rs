@@ -3,7 +3,19 @@ use std::io;
 use std::process::{Command, Stdio};
 use termion::input::TermRead;
 
-// Opens a title file and only pipes through pr
+/// Opens the title files and only pipes them through  the 'pr' command.
+/// This fuction is only used for the title files because all it does is centering, no text formattting.
+/// This is done so that the title and planet can preserve their shape.
+///
+/// ## Example
+///
+/// ```
+/// pr -t -o 7 Story/"[TITLE].txt"
+/// ```
+///
+/// ## Panics
+///
+/// Panics at every step if the it cannot complete.
 pub fn open_title_file(filename: String, terminal_width: usize) -> String {
     let mut file = File::open(&filename).ok().expect("Failed to open file");
     let line_length: usize = file.read_line().unwrap().expect("Failed to get first line").len();
@@ -25,8 +37,18 @@ pub fn open_title_file(filename: String, terminal_width: usize) -> String {
     story_file
 }
 
-// Opens the file and pipes the text through fmt and pr before returning
-// Running this command: fmt -s -w 70 Story/"[C0].txt" | pr -t -o 7
+/// Opens the file and pipes the text through the 'fmt' and 'pr' commands.
+/// This will ensure that the text is nicely formatted and will best fit the terminal size.
+///
+/// ## Example
+///
+/// ```
+/// fmt -s -w 70 Story/"[C0].txt" | pr -t -o 7
+/// ```
+///
+/// ## Panics
+///
+/// Panics at every step if the it cannot complete.
 pub fn open_text_file(filename: String, terminal_width: usize) -> String {
     let mut fmt = Command::new("fmt")
         .args(&["-s", "-w", &(terminal_width - (terminal_width / 5)).to_string()])
