@@ -96,11 +96,11 @@ pub fn game_loop() {
     let mut story: StoryPage = Default::default();
 
     // Opening title and sets game state
-    let planet_file_1: String = String::from("Story/[PLANET1].txt");
+    let planet_file_1: String = String::from("story/[PLANET1].txt");
     let planet_1: String = file_handler::open_title_file(planet_file_1, terminal_width);
-    let planet_file_2: String = String::from("Story/[PLANET2].txt");
+    let planet_file_2: String = String::from("story/[PLANET2].txt");
     let planet_2: String = file_handler::open_title_file(planet_file_2, terminal_width);
-    let title_file: String = String::from("Story/[TITLE].txt");
+    let title_file: String = String::from("story/[TITLE].txt");
     let title: String = file_handler::open_title_file(title_file, terminal_width);
     let title_active: bool = true;
     let story_path: Vec<StoryNode> = Vec::new();
@@ -176,7 +176,7 @@ pub fn game_loop() {
                     }
                     else if character.name.len() != 0 && character.continue_active {
                         character_creator_active = false;
-                        filename = String::from("Story/[C0].txt");
+                        filename = String::from("story/[C0].txt");
                         file_text = file_handler::open_text_file(filename, terminal_width);
                         story = StoryPage::initial_story_page(file_text, &character);
                         stdout = write_story(&story, &game_state, stdout);
@@ -524,7 +524,7 @@ fn update_story_path(story: &StoryPage, mut game_state: GameState) -> GameState{
 /// Submits the current selected option by the user.
 /// Then opens the new story page that the user selected.
 fn submit_option(mut story: StoryPage, game_state: &GameState) -> StoryPage{
-    let filename: String = format!("Story/{}.txt", story.option_codes[story.selection_num]);
+    let filename: String = format!("story/{}.txt", story.option_codes[story.selection_num]);
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
     story.text = file_text;
     story = StoryPage::new_story_page(story);
@@ -563,9 +563,9 @@ fn re_read(story: &StoryPage, mut game_state: GameState, direction: i8) -> GameS
 fn open_previous_story(mut story: StoryPage, game_state: &GameState) -> StoryPage {
     let filename: String;
     if game_state.re_read_mode {
-        filename = format!("Story/{}.txt", &game_state.story_path[game_state.previous_story_num].file_code);
+        filename = format!("story/{}.txt", &game_state.story_path[game_state.previous_story_num].file_code);
     } else{
-        filename = format!("Story/{}.txt", &game_state.current_story_point);
+        filename = format!("story/{}.txt", &game_state.current_story_point);
     }
     let file_text: String = file_handler::open_text_file(filename, game_state.terminal_width);
     story.text = file_text;

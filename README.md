@@ -4,6 +4,7 @@
   <a href="https://github.com/markuz449/Devolution-Rust">
   </a>
 
+  <img src="assets/Title.png" alt="Devolution Title Image">
   <h3 align="center">DEVOLUTION</h3>
 
   <p align="center">
@@ -49,6 +50,7 @@ To get a local copy up and running follow these simple steps.
 ### Prerequisites
 
 * Rust
+
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
