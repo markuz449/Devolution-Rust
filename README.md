@@ -34,6 +34,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+Devolution is a sci-fi choose your own adventure game set in a dystopian alien world. This game has been designed for Unix-Terminals so currently it only supports Linux and Mac OS. 
+
 This project is a recreation of a full year project I was apart of that was originally created in C. The stipulations for the project was that it had to be cool and less than 1000 lines of code. I've decided to recreate it in Rust because I wasn't happy with the final release of the original product. 
 
 ### Built With
@@ -74,9 +76,34 @@ cargo run
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The game hasn't been fully re-created yet and is still in development
+I used the Termion crate in this project to convert the terminal into raw mode. This meant that I could take inputs directly from the user without them having to enter something into the terminal and then press enter to continue the game. Termion also provided text colouring as well as text styling to make the game prettier.
 
+The Character Creator is where you can create your (very simple) character. The current selected segment is blue so you know exactly where you are. The character's name has a max of 20 characters.
 
+<p align="center">
+  <img src="assets/Character Creator.png">
+</p>
+
+The story is piped through two different unix commands to format the text. I did this so that the story would be more readible as the terminal didn't offer word wrapping. The story was increadibly hard to read when words were broken halfway through with no clear indication. The text formatting also allowed the game to be ran with any size terminal.
+
+<p align="center">
+  <img src="assets/Story Page.png">
+</p>
+
+You can generate documentation for this project using cargo
+
+1. Generate docs using cargo
+```sh
+cargo doc
+```
+2. Navigate to the docs
+```sh
+cd target/doc/devolution_rust
+```
+3. Open the documentation
+```sh
+xdg-open index.html
+```
 
 <!-- ROADMAP -->
 ## Roadmap
