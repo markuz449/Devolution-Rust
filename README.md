@@ -90,6 +90,19 @@ The story is piped through two different unix commands to format the text. I did
   <img src="assets/Story Page.png">
 </p>
 
+The game also allows the user to re-read back through the story if they forgot something, just like a book. The only choice that is shown was the users original choice, all the other possible choices aren't visible when going back through the story.
+
+<p align="center">
+  <img src="assets/Re-Reading Story.png">
+</p>
+
+The game also has a super simple help menu! Just hit the 'H' key and then you'll get all the information that you possibly need!
+P.S. There isn't a lot...
+
+<p align="center">
+  <img src="assets/Help Menu.png">
+</p>
+
 You can generate documentation for this project using cargo
 
 1. Generate docs using cargo
